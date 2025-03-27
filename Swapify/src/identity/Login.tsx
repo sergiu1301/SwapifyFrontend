@@ -73,9 +73,9 @@ const Login: React.FC = () => {
       setErrorMessage("");
 
       if (profile.roleName === "admin") {
-        navigate("/dashboard_admin/manage?type=Users");
+        navigate("/admin/manage?type=individuals");
       } else if (profile.roleName === "user") {
-        navigate("/dashboard_user/manage_rooms");
+        navigate("/user/manage_rooms");
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -96,7 +96,7 @@ const Login: React.FC = () => {
                 fontWeight: "bold",
               }}
             >
-              Log Into Visi
+              Log Into Swapify
             </Typography>
             <Divider sx={lineUpStyle} />
             <Box
@@ -157,7 +157,7 @@ const Login: React.FC = () => {
               {loading ? "Logging in..." : "Log in"}
             </Button>
             <Box style={{ marginTop: "10px" }}>
-              <Link to="/forgot_password" style={{ textDecoration: "none" }}>
+              <Link to="/forgot-password" style={{ textDecoration: "none" }}>
                 <Button
                   color="primary"
                   variant="text"
@@ -187,7 +187,7 @@ const Login: React.FC = () => {
 };
 
 const loginContainerStyle = {
-  width: "100%",
+  width: "500px",
   padding: "30px",
   borderRadius: "10px",
   textAlign: "center",
@@ -205,7 +205,7 @@ const loginButtonStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#25764F",
+    backgroundColor: "#3CB371",
   },
 };
 
@@ -220,7 +220,7 @@ const forgotPasswordButtonStyle = {
   cursor: "pointer",
   "&:hover": {
     backgroundColor: "transparent",
-    color: "#1F6D42",
+    color: "#3CB371",
   },
 };
 
@@ -235,7 +235,7 @@ const signUpButtonStyle = {
   cursor: "pointer",
   "&:hover": {
     backgroundColor: "transparent",
-    color: "#1F6D42",
+    color: "#3CB371",
   },
 };
 

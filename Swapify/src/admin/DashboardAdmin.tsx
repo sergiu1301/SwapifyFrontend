@@ -35,10 +35,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import GridLoader from "react-spinners/GridLoader";
 
 import UserMenu from "../user/UserMenu.tsx";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUserProfile } from "../UserProfileProvider.tsx";
 import ProfilePage from "../user/ProfilePage.tsx";
+import ShimmerTableLoader from "./ShimmerTableLoader.tsx";
+import useUsersQuery from "../hooks/useUsersQuery.tsx";
+import useRolesQuery from "../hooks/useRolesQuery.tsx";
 
 type RoleType = string;
 
@@ -50,7 +53,7 @@ const DashboardAdmin: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [context, setContext] = useState<"individuals" | "roles">("individuals");
@@ -73,45 +76,6 @@ const DashboardAdmin: React.FC = () => {
   const queryClient = useQueryClient();
   const { userProfile } = useUserProfile();
   const apiUrl = import.meta.env.VITE_API_URL;
-
-  // ======= FETCH USERS =======
-  const fetchUsers = async (page: number, rowsPerPage: number) => {
-    if (!token) {
-      throw new Error("JWT token not found");
-    }
-    const response = await fetch(
-        `${apiUrl}/api/v1/admin/users?pageNumber=${page + 1}&pageSize=${rowsPerPage}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(searchQuery),
-        }
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch users");
-    }
-    return await response.json();
-  };
-
-  // ======= FETCH ROLES =======
-  const fetchRoles = async () => {
-    if (!token) {
-      throw new Error("JWT token not found");
-    }
-    const response = await fetch(`${apiUrl}/api/v1/admin/roles`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to fetch roles");
-    }
-    return await response.json();
-  };
 
   // ======= DELETE USER =======
   const fetchDeleteUser = async (userId: string) => {
@@ -240,10 +204,11 @@ const DashboardAdmin: React.FC = () => {
     data,
     isLoading: isUsersLoading,
     isError: isUsersError,
-    refetch,
-  } = useQuery(["users", page, rowsPerPage], () => fetchUsers(page, rowsPerPage), {
-    cacheTime: 60000,
-    staleTime: 300000,
+  } = useUsersQuery({
+    page,
+    rowsPerPage,
+    searchQuery,
+    enabled: context === "individuals",
   });
 
   // ======= REACT-QUERY: ROLES =======
@@ -251,26 +216,16 @@ const DashboardAdmin: React.FC = () => {
     data: dataRoles,
     isLoading: isRolesLoading,
     isError: isRolesError,
-  } = useQuery(["roles"], () => fetchRoles(), {
-    cacheTime: 60000,
-    staleTime: 300000,
+  } = useRolesQuery({
+    enabled: true,
   });
 
   // ======= EFECTE =======
-  useEffect(() => {
-    // Refacem fetch la users dacă se schimbă searchQuery
-    const fetchData = async () => {
-      await refetch();
-    };
-    fetchData();
-  }, [searchQuery, refetch]);
-
   // Când se schimbă contextul (Individuals vs Roles), resetăm paginarea
   useEffect(() => {
     setSearchQuery("");
     setPage(0);
-    setRowsPerPage(5);
-    fetchUsers(0, 5);
+    setRowsPerPage(10);
   }, [context]);
 
   // ======= HANDLERS =======
@@ -366,9 +321,9 @@ const DashboardAdmin: React.FC = () => {
   // Schimbă tab-ul (Individuals / Roles)
   const handleButtonClick = (selectedContext: "individuals" | "roles") => {
     if (selectedContext === "individuals") {
-      navigate("?type=Individuals");
+      navigate("?type=individuals");
     } else if (selectedContext === "roles") {
-      navigate("?type=Roles");
+      navigate("?type=roles");
     }
     setContext(selectedContext);
   };
@@ -410,7 +365,6 @@ const DashboardAdmin: React.FC = () => {
   };
 
   const handleConfirmDelete = async () => {
-    // Confirmarea e validă doar dacă emailul userului logat = confirmationEmail
     if (userProfile?.email === confirmationEmail) {
       if (userToDelete) {
         await fetchDeleteUser(userToDelete);
@@ -430,16 +384,6 @@ const DashboardAdmin: React.FC = () => {
     setRoleToDelete(null);
   };
 
-  if (isUsersError || isRolesError) {
-    return (
-        <Box sx={{ color: "white", textAlign: "center", marginTop: "2rem" }}>
-          <Typography variant="h6" color="error">
-            Error fetching data
-          </Typography>
-        </Box>
-    );
-  }
-
   const users = data?.users || [];
   const totalUsers = data?.noUsers || 0;
   const currentType = searchParams.get("type");
@@ -449,28 +393,12 @@ const DashboardAdmin: React.FC = () => {
           sx={{
             width: "100vw",
             height: "100vh",
-            backgroundColor: "#1e1e1e", // Fundal închis
-            color: "#fff",              // Text alb
+            backgroundColor: "#1e1e1e",
+            color: "#fff",
             display: "flex",
             flexDirection: "column",
           }}
       >
-        {/* BARA DE SUS */}
-        <AppBar position="static" sx={{ backgroundColor: "#000" }}>
-          <Toolbar>
-            <Box sx={{ display: "flex", marginLeft: -3, alignItems: "center", flexGrow: 3 }}>
-              <img
-                  src="../src/assets/logo.svg"
-                  alt="Logo"
-                  style={{ height: "60px", marginRight: 0 }}
-              />
-              <Typography variant="h6">Swapify</Typography>
-            </Box>
-
-            {/* Meniu cu icon + dropdown */}
-            <UserMenu />
-          </Toolbar>
-        </AppBar>
 
         {/* CONȚINUT PRINCIPAL: SIDEBAR STÂNGA + Pagină */}
         <Grid container sx={{ flex: 1, overflow: "hidden" }}>
@@ -483,10 +411,18 @@ const DashboardAdmin: React.FC = () => {
                 backgroundColor: "#2a2a2a",
                 display: "flex",
                 flexDirection: "column",
-                padding: "16px",
-                maxHeight: "100%",
+                padding: "16px"
               }}
           >
+            <Box sx={{ display: "flex", marginLeft: -2, marginBottom: 2}}>
+              <img
+                  src="../src/assets/logo.svg"
+                  alt="Logo"
+                  style={{ height: "60px", marginTop: -13, marginRight: -5 }}
+              />
+              <Typography variant="h6">Swapify</Typography>
+            </Box>
+
             <Typography variant="h6" sx={{ marginBottom: 3 }}>
               Manage
             </Typography>
@@ -520,13 +456,21 @@ const DashboardAdmin: React.FC = () => {
               xs={12}
               md={10}
               sx={{
-                padding: "16px",
                 display: "flex",
                 flexDirection: "column",
                 overflow: "auto",
               }}
           >
-            {currentType === "Profile" && (
+            {/* BARA DE SUS */}
+            <AppBar position="static" sx={{ backgroundColor: "#000", alignItems: "end" }}>
+              <Toolbar>
+
+                {/* Meniu cu icon + dropdown */}
+                <UserMenu />
+              </Toolbar>
+            </AppBar>
+
+            {currentType === "profile" && (
                     <ProfilePage />
                 )}
 
@@ -555,55 +499,107 @@ const DashboardAdmin: React.FC = () => {
                   </Box>
 
                   {/* SEARCH BAR */}
-                  <TextField
-                      variant="outlined"
-                      placeholder="Search by name or email"
-                      onChange={handleSearchChange}
-                      sx={{ marginBottom: 2 }}
-                      InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                              <SearchIcon />
-                            </InputAdornment>
-                        ),
-                      }}
-                  />
-
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                    <TextField
+                        variant="outlined"
+                        placeholder="Search by name or email"
+                        onChange={handleSearchChange}
+                        sx={{ marginRight: 2 }}
+                        InputProps={{
+                          startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon />
+                              </InputAdornment>
+                          ),
+                        }}
+                    />
+                    {selectedRows.length >= 1 && (
+                        <Button
+                            variant="contained"
+                            sx={deleteAllButtonEnableStyle}
+                            onClick={handleDeleteSelectedRows}
+                        >
+                          Delete Selected
+                        </Button>
+                    )}
+                  </Box>
                   {/* Loader */}
                   {isUsersLoading && (
-                      <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: "60vh",
-                          }}
-                      >
-                        <GridLoader
-                            color="#3CB371"
-                            loading={isUsersLoading}
-                            cssOverride={override}
-                            size={20}
-                        />
-                      </Box>
+                      <ShimmerTableLoader rows={rowsPerPage}/>
                   )}
 
+                  {isUsersError && (
+                      <Box sx={{ color: "white", textAlign: "center", marginTop: "2rem" }}>
+                        <Typography variant="h6" color="error">
+                          Error fetching data
+                        </Typography>
+                      </Box>
+                  )}
                   {/* Tabel cu useri */}
-                  {!isUsersLoading && (
+                  {!isUsersLoading && !isUsersError && (
                       <>
-                        <TableContainer sx={{ maxHeight: "60vh", overflow: "auto" }}>
-                          <Table>
+                        <TableContainer sx={{overflow: "auto",
+                          maxHeight: {
+                            xs: "auto",
+                            md: "calc(100vh - 280px)",
+                          },
+                          "&::-webkit-scrollbar": {
+                            width: "8px",
+                            height: "8px",
+                          },
+                          "&::-webkit-scrollbar-thumb": {
+                            backgroundColor: "#555",
+                            borderRadius: "8px",
+                          },
+                          "&::-webkit-scrollbar-thumb:hover": {
+                            backgroundColor: "#888",
+                          },
+                          "&::-webkit-scrollbar-track": {
+                            backgroundColor: "#2a2a2a",
+                          },
+                          scrollbarWidth: "thin",
+                          scrollbarColor: "#555 #2a2a2a",
+                        }}>
+                          <Table stickyHeader>
                             <TableHead>
                               <TableRow sx={{ backgroundColor: "#333" }}>
-                                <TableCell sx={{ color: "#fff" }} />
-                                <TableCell sx={{ color: "#fff" }}>Member</TableCell>
-                                <TableCell sx={{ color: "#fff" }}>Status</TableCell>
-                                <TableCell sx={{ color: "#fff" }}>Role</TableCell>
-                                <TableCell sx={{ color: "#fff" }}>
-                                  Last login
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }} />
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Member</TableCell>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Status</TableCell>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Role</TableCell>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>
+                                  Phone
                                 </TableCell>
-                                <TableCell sx={{ color: "#fff" }} align="right">
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }} align="right">
                                   Actions
+                                </TableCell>
+                              </TableRow>
+                              <TableRow sx={{ visibility: "collapse" }}>
+                                <TableCell>
+                                  <Checkbox />
+                                </TableCell>
+                                <TableCell>averyaddress@exampledomain.com</TableCell>
+                                <TableCell>
+                                  <Box
+                                    sx={{
+                                      display: "inline-block",
+                                      px: 1.5,
+                                      py: 0.5,
+                                      borderRadius: "999px",
+                                      fontSize: "0.8rem",
+                                      fontWeight: 500,
+                                      textAlign: "center",
+                                      minWidth: "90px",
+                                    }}
+                                >
+                                  exampleOfStatus
+                                </Box>
+                                </TableCell>
+                                <TableCell>exampleOfRoleName</TableCell>
+                                <TableCell>00000000000000000</TableCell>
+                                <TableCell align="right">
+                                  <IconButton><BlockIcon /></IconButton>
+                                  <IconButton><DeleteIcon /></IconButton>
                                 </TableCell>
                               </TableRow>
                             </TableHead>
@@ -615,18 +611,25 @@ const DashboardAdmin: React.FC = () => {
 
                                 // Ex: interpretăm statusul: dacă e blocked => "Blocked", altfel "Pending"/"Active" etc.
                                 let userStatus = "Pending";
-                                if (user.isBlocked) userStatus = "Blocked";
+                                if (user.emailConfirmed) userStatus = "Confirmed";
                                 else if (user.status) userStatus = user.status;
-                                // (sau user.status din API, cum vrei să-l afișezi)
 
                                 return (
                                     <TableRow
                                         key={user.userId}
-                                        sx={
-                                          isItemSelected
-                                              ? { backgroundColor: "#3b3b3b" }
-                                              : { backgroundColor: "transparent" }
-                                        }
+                                        onClick={() => handleCheckboxChange(user.userId)}
+                                        sx={{
+                                          backgroundColor: selectedRows.includes(user.userId)
+                                              ? "#3b3b3b"
+                                              : "transparent",
+                                          cursor: "pointer",
+                                          transition: "background-color 0.2s ease",
+                                          "&:hover": {
+                                            backgroundColor: selectedRows.includes(user.userId)
+                                                ? "#3b3b3b"
+                                                : "#2f2f2f",
+                                          },
+                                        }}
                                     >
                                       <TableCell>
                                         <Checkbox
@@ -637,11 +640,36 @@ const DashboardAdmin: React.FC = () => {
                                             sx={{ color: "#fff" }}
                                         />
                                       </TableCell>
-                                      <TableCell sx={{ color: "#fff" }}>
+                                      <TableCell sx={{
+                                        color: "#fff",
+                                        maxWidth: 200, // ajustează după nevoie
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        cursor: "default",
+                                      }}
+                                                 title={user.email}
+                                      >
                                         {highlightSearchText(user.email, searchQuery)}
                                       </TableCell>
-                                      <TableCell sx={{ color: "#fff" }}>
+                                      <TableCell>
+                                        <Box
+                                            sx={{
+                                              display: "inline-block",
+                                              px: 1.5,
+                                              py: 0.5,
+                                              borderRadius: "999px",
+                                              fontSize: "0.8rem",
+                                              fontWeight: 500,
+                                              color: "#fff",
+                                              backgroundColor:
+                                                  userStatus === "Confirmed" ? "#2E8B57" : "#FFA500",
+                                              textAlign: "center",
+                                              minWidth: "90px",
+                                            }}
+                                        >
                                         {userStatus}
+                                        </Box>
                                       </TableCell>
                                       <TableCell>
                                         <Select
@@ -656,6 +684,7 @@ const DashboardAdmin: React.FC = () => {
                                             onChange={(e) =>
                                                 handleRoleChange(e, user.userId)
                                             }
+                                            onClick={(e) => e.stopPropagation()}
                                         >
                                           {dataRoles &&
                                               dataRoles.roles.map(
@@ -675,17 +704,17 @@ const DashboardAdmin: React.FC = () => {
                                         </Select>
                                       </TableCell>
                                       <TableCell sx={{ color: "#fff" }}>
-                                        {/* Last login - dacă nu există, afișăm "-" */}
-                                        {user.lastLogin ? user.lastLogin : "-"}
+                                        {user.phoneNumber ? user.phoneNumber : "-"}
                                       </TableCell>
                                       <TableCell align="right" sx={{ color: "#fff" }}>
                                         {user.lockoutEnd === null && (
                                             <IconButton
                                                 disabled={isItemSelected}
                                                 sx={blockButtonStyle}
-                                                onClick={() =>
-                                                    handleBlockUser(user.userId)
-                                                }
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleBlockUser(user.userId);
+                                                }}
                                                 aria-label="block"
                                             >
                                               <BlockIcon />
@@ -695,9 +724,10 @@ const DashboardAdmin: React.FC = () => {
                                             <IconButton
                                                 disabled={isItemSelected}
                                                 sx={blockRedButtonStyle}
-                                                onClick={() =>
-                                                    handleUnblockUser(user.userId)
-                                                }
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleUnblockUser(user.userId);
+                                                }}
                                                 aria-label="block"
                                             >
                                               <BlockIcon />
@@ -723,21 +753,11 @@ const DashboardAdmin: React.FC = () => {
 
                         {/* Footer: buton de Delete Selected + paginare */}
                         <Box sx={paginationContainerStyle}>
-                          {selectedRows.length >= 2 && (
-                              <Button
-                                  variant="contained"
-                                  sx={deleteAllButtonEnableStyle}
-                                  onClick={handleDeleteSelectedRows}
-                              >
-                                Delete Selected
-                              </Button>
-                          )}
-
                           <TablePagination
                               sx={{
                                 color: "#fff",
                               }}
-                              rowsPerPageOptions={[5, 10, 25]}
+                              rowsPerPageOptions={[10, 25, 50]}
                               component="div"
                               count={totalUsers}
                               rowsPerPage={rowsPerPage}
@@ -795,17 +815,38 @@ const DashboardAdmin: React.FC = () => {
                           </Button>
                         </Box>
 
-                        <TableContainer>
-                          <Table>
+                        <TableContainer sx={{overflow: "auto",
+                          maxHeight: {
+                            xs: "auto",
+                            md: "calc(100vh - 280px)",
+                          },
+                          "&::-webkit-scrollbar": {
+                            width: "8px",
+                            height: "8px",
+                          },
+                          "&::-webkit-scrollbar-thumb": {
+                            backgroundColor: "#555",
+                            borderRadius: "8px",
+                          },
+                          "&::-webkit-scrollbar-thumb:hover": {
+                            backgroundColor: "#888",
+                          },
+                          "&::-webkit-scrollbar-track": {
+                            backgroundColor: "#2a2a2a",
+                          },
+                          scrollbarWidth: "thin",
+                          scrollbarColor: "#555 #2a2a2a",
+                        }}>
+                          <Table stickyHeader>
                             <TableHead>
                               <TableRow sx={{ backgroundColor: "#333" }}>
-                                <TableCell sx={{ color: "#fff" }}>RoleId</TableCell>
-                                <TableCell sx={{ color: "#fff" }}>Name</TableCell>
-                                <TableCell sx={{ color: "#fff" }}>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Id</TableCell>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Name</TableCell>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>
                                   Description
                                 </TableCell>
-                                <TableCell align="right" sx={{ color: "#fff" }}>Actions</TableCell>
-                                <TableCell sx={{ color: "#fff" }} />
+                                <TableCell align="right" sx={{ backgroundColor: "#333", color: "#fff" }}>Actions</TableCell>
+                                <TableCell sx={{ backgroundColor: "#333", color: "#fff" }} />
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -956,13 +997,13 @@ const DashboardAdmin: React.FC = () => {
 const invitePeopleButtonStyle = {
   textTransform: "unset",
   padding: "10px",
-  backgroundColor: "#3CB371",
+  backgroundColor: "#2E8B57",
   color: "#fff",
   border: "none",
   borderRadius: "5px",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#2E8B57",
+    backgroundColor: "#3CB371",
   },
 };
 
@@ -1022,18 +1063,8 @@ const deleteAllButtonEnableStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#25764F",
+    backgroundColor: "#3CB371",
   },
-};
-
-const deleteAllButtonDisableStyle = {
-  textTransform: "unset",
-  padding: "10px",
-  backgroundColor: "#bbb",
-  color: "#fff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
 };
 
 const cancelButtonStyle = {

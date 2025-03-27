@@ -9,7 +9,6 @@ import EmailNotification from "./email/EmailNotification.tsx";
 import ConfirmEmail from "./email/ConfirmEmail.tsx";
 import NewPassword from "./identity/NewPassword.tsx";
 import DashboardAdmin from "./admin/DashboardAdmin.tsx";
-import ProfilePage from "./user/ProfilePage.tsx";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -51,30 +50,29 @@ const App: React.FC = () => {
                 }
               />
               <Route path="/register" element={<Register />} />
-              <Route path="/forgot_password" element={<ForgotPassword />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route
-                path="/dashboard_admin/manage"
+                path="/admin/manage"
                 element={
                   <QueryClientProvider client={queryClient}>
                     <DashboardAdmin />
                   </QueryClientProvider>
                 }
               />
-              <Route path="/profile" element={<ProfilePage />} />
               <Route
-                path="/success_notification"
+                path="/success-notification"
                 element={<SuccessNotification />}
               />
               <Route
-                path="/no_success_notification"
+                path="/no-success-notification"
                 element={<NoSuccessNotification />}
               />
               <Route
-                path="/email_notification"
+                path="/email-notification"
                 element={<EmailNotification />}
               />
-              <Route path="/set_new_password" element={<NewPassword />} />
-              <Route path="/confirm_email" element={<ConfirmEmail />} />
+              <Route path="/reset-password" element={<NewPassword />} />
+              <Route path="/confirm-email" element={<ConfirmEmail />} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </WebSocketProvider>

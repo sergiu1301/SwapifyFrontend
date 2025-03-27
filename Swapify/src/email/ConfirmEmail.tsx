@@ -16,28 +16,25 @@ const ConfirmEmail: React.FC = () => {
     const fetchData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
-        const urlData = searchParams.get("userId");
+        const urlUserId = searchParams.get("userId");
+        const token = searchParams.get("token");
 
-        if (!urlData || urlData.length != 64) {
+        if (!urlUserId || urlUserId.length != 36 || !token) {
           throw new Error("Url has not a good format");
         }
 
         const response = await fetch(
-          `${apiUrl}/api/v1/user/${encodeURIComponent(urlData)}/confirm-email`,
-          {
-            method: "PUT",
-          },
-        );
+          `${apiUrl}/api/v1/user/confirm-email?userId=${urlUserId}&token=${encodeURIComponent(token)}`, {
+            method: "GET"
+        });
 
         if (!response.ok) {
-          navigate("/success_notification?typePage=ConfirmEmail");
+          navigate("/success-notification?typePage=ConfirmEmail");
           throw new Error("Network response was not ok");
         }
 
-        navigate("/success_notification?typePage=ConfirmEmail");
       } catch (error) {
         setLoading(true);
-        navigate("/no_success_notification?typePage=ConfirmEmail");
       } finally {
         setLoading(false);
       }

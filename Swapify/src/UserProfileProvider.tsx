@@ -6,7 +6,7 @@ interface UserProfile {
   userName: string;
   firstName: string;
   lastName: string;
-  isOnline: boolean;
+  phoneNumber: string;
   email: string;
   emailConfirmed: boolean;
   roleDescription: string;
@@ -31,7 +31,6 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchUserProfile = async (token: string): Promise<UserProfile> => {
     const response = await fetch(`${apiUrl}/api/v1/user`, {
       headers: {
-        "ngrok-skip-browser-warning": "true",
         Authorization: `Bearer ${token}`,
       },
     });

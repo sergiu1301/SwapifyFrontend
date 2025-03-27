@@ -38,12 +38,13 @@ const EmailNotification: React.FC = () => {
             </Box>
             <Box style={{ marginBottom: "20px", marginTop: "10px" }}>
               <Typography
-                color="black"
+                color="white"
                 style={{
-                  fontSize: "14px",
+                  fontSize: "16px",
                   display: "block",
                   textAlign: "left",
                   marginTop: "12px",
+                  marginBottom: "10px",
                   width: "auto",
                 }}
               >

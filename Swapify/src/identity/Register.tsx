@@ -19,17 +19,15 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [isRevealPwd1, setIsRevealPwd1] = useState<boolean>(false);
   const [isRevealPwd2, setIsRevealPwd2] = useState<boolean>(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [firstNameError, setFirstNameError] = useState("");
-  const [lastNameError, setLastNameError] = useState("");
   const [loading, setLoading] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const clientId = import.meta.env.VITE_CLIENT_ID;
+  const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
   const validateEmail = (email: string): boolean => {
     const re =
@@ -73,43 +71,8 @@ const Register: React.FC = () => {
     return true;
   };
 
-  const validateFirstName = (firstName: string): boolean => {
-    let valid = true;
-    if (!firstName.trim()) {
-      setFirstNameError("First name is required");
-      valid = false;
-    } else {
-      setFirstNameError("");
-    }
-
-    return valid;
-  };
-
-  const validateLastName = (lastName: string): boolean => {
-    let valid = true;
-
-    if (!lastName.trim()) {
-      setLastNameError("Last name is required");
-      valid = false;
-    } else {
-      setLastNameError("");
-    }
-
-    return valid;
-  };
-
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-  };
-
-  const handleFirstNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setFirstName(event.target.value);
-  };
-
-  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(event.target.value);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,21 +91,18 @@ const Register: React.FC = () => {
       const response = await fetch(`${apiUrl}/connect/register`, {
         method: "POST",
         headers: {
-          "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email,
           password: password,
-          firstName: firstName,
-          middleName: lastName,
-          lastName: lastName,
-          scope: "application_scope",
+          clientId: clientId,
+          clientSecret: clientSecret
         }),
       });
 
       if (response.ok) {
-        navigate("/email_notification?typePage=ConfirmEmail");
+        navigate("/email-notification?typePage=ConfirmEmail");
       }
 
       if (!response.ok) {
@@ -177,33 +137,8 @@ const Register: React.FC = () => {
             style={{
               display: "flex",
               justifyContent: "space-between",
-              marginBottom: "20px",
             }}
           >
-            <Box style={{ marginRight: "5px" }}>
-              <TextField
-                type="lastName"
-                value={lastName}
-                onChange={handleLastNameChange}
-                onBlur={() => validateLastName(lastName)}
-                label="Last name"
-                fullWidth
-                error={!!lastNameError}
-                helperText={lastNameError}
-              />
-            </Box>
-            <Box style={{ marginLeft: "5px" }}>
-              <TextField
-                type="firstName"
-                value={firstName}
-                onChange={handleFirstNameChange}
-                onBlur={() => validateFirstName(firstName)}
-                label="First name"
-                fullWidth
-                error={!!firstNameError}
-                helperText={firstNameError}
-              />
-            </Box>
           </Box>
           <Box
             style={{
@@ -325,8 +260,8 @@ const Register: React.FC = () => {
 };
 
 const registerContainerStyle = {
-  width: "400px",
-  padding: "20px",
+  width: "500px",
+  padding: "30px",
   borderRadius: "10px",
   textAlign: "center",
   boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",
@@ -343,7 +278,7 @@ const registerButtonStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#25764F",
+    backgroundColor: "#3CB371",
   },
 };
 

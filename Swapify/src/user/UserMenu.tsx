@@ -36,7 +36,7 @@ const UserMenu: React.FC = () => {
     };
 
     const handleProfileClick = () => {
-        navigate("?type=Profile");
+        navigate("?type=profile");
         handleCloseMenu();
     };
 

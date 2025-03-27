@@ -15,6 +15,9 @@ const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const clientId = import.meta.env.VITE_CLIENT_ID;
+  const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -23,12 +26,11 @@ const ForgotPassword: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetch(`${apiUrl}/api/v1/user/forgot-password`, {
-        method: "POST",
+        method: "PUT",
         headers: {
-          "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, clientId: clientId, clientSecret: clientSecret }),
       });
 
       if (!response.ok) {
@@ -36,7 +38,7 @@ const ForgotPassword: React.FC = () => {
       }
 
       if (response.ok) {
-        navigate("/email_notification?typePage=ResetPassword");
+        navigate("/email-notification?typePage=ResetPassword");
       }
     } catch (error) {
       console.error("Error register:", error);
@@ -108,8 +110,8 @@ const ForgotPassword: React.FC = () => {
 };
 
 const forgotPasswordContainerStyle = {
-  width: "400px",
-  padding: "20px",
+  width: "500px",
+  padding: "30px",
   borderRadius: "10px",
   textAlign: "center",
   boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",
@@ -140,7 +142,7 @@ const resetPasswordButtonStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#25764F",
+    backgroundColor: "#3CB371",
   },
 };
 

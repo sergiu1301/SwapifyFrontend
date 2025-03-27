@@ -24,6 +24,9 @@ const NewPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const clientId = import.meta.env.VITE_CLIENT_ID;
+  const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
+
   const validatePassword = (password: string): boolean => {
     const re =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$%^&£*\-_+=[\]{}|\\:',?\/`~""()<>;!]{10,32}$/;
@@ -70,32 +73,32 @@ const NewPassword: React.FC = () => {
       try {
         setLoading(true);
         const searchParams = new URLSearchParams(location.search);
-        const urlData = searchParams.get("userId");
+        const urlUserId = searchParams.get("userId");
+        const token = searchParams.get("token");
 
-        if (!urlData || urlData.length != 64) {
+        if (!urlUserId || urlUserId.length != 36 || !token) {
           throw new Error("Url has not a good format");
         }
 
         const response = await fetch(
-          `${apiUrl}/api/v1/user/${encodeURIComponent(urlData)}/change-password`,
+          `${apiUrl}/api/v1/user/reset-password?userId=${urlUserId}&token=${encodeURIComponent(token)}`,
           {
             method: "PUT",
             headers: {
-              "ngrok-skip-browser-warning": "true",
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ password: password }),
+            body: JSON.stringify({ newPassword: password, clientId: clientId, clientSecret: clientSecret }),
           },
         );
 
         if (!response.ok) {
-          navigate("/no_success_notification?typePage=ResetPassword");
+          navigate("/no-success-notification?typePage=ResetPassword");
           throw new Error("Failed to set new password");
         }
-        navigate("/success_notification?typePage=ResetPassword");
+        navigate("/success-notification?typePage=ResetPassword");
       } catch (error) {
         console.error("Error setting new password:", error);
-        navigate("/no_success_notification?typePage=ResetPassword");
+        navigate("/no-success-notification?typePage=ResetPassword");
         throw error;
       } finally {
         setLoading(false);
@@ -214,8 +217,8 @@ const NewPassword: React.FC = () => {
 };
 
 const newPasswordContainerStyle = {
-  width: "400px",
-  padding: "20px",
+  width: "500px",
+  padding: "30px",
   borderRadius: "10px",
   textAlign: "center",
   boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",
@@ -251,7 +254,7 @@ const setPasswordButtonStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   "&:hover": {
-    backgroundColor: "#25764F",
+    backgroundColor: "#3CB371",
   },
 };
 
