@@ -8,7 +8,7 @@ import NoSuccessNotification from "./email/NoSuccessNotification.tsx";
 import EmailNotification from "./email/EmailNotification.tsx";
 import ConfirmEmail from "./email/ConfirmEmail.tsx";
 import NewPassword from "./identity/NewPassword.tsx";
-import DashboardAdmin from "./admin/DashboardAdmin.tsx";
+import DashboardAdmin from "./admin/DashboadAdmin.tsx";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

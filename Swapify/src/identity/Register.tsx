@@ -240,7 +240,7 @@ const Register: React.FC = () => {
             }}
           >
             <Link to="/">
-              <Button variant="contained" sx={cancelButtonStyle}>
+              <Button sx={{height: "44.5px", color: "#ccc"}}>
                 Cancel
               </Button>
             </Link>
@@ -279,20 +279,6 @@ const registerButtonStyle = {
   cursor: "pointer",
   "&:hover": {
     backgroundColor: "#3CB371",
-  },
-};
-
-const cancelButtonStyle = {
-  textTransform: "unset",
-  flex: "1",
-  height: "44.5px",
-  backgroundColor: "#ccc",
-  color: "#000",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#bbb",
   },
 };
 

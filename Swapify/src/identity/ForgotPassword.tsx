@@ -90,7 +90,7 @@ const ForgotPassword: React.FC = () => {
             }}
           >
             <Link to="/">
-              <Button variant="contained" sx={cancelButtonStyle}>
+              <Button sx={{ height: "44.5px", color: "#ccc"}}>
                 Cancel
               </Button>
             </Link>
@@ -115,20 +115,6 @@ const forgotPasswordContainerStyle = {
   borderRadius: "10px",
   textAlign: "center",
   boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",
-};
-
-const cancelButtonStyle = {
-  textTransform: "unset",
-  flex: "1",
-  backgroundColor: "#ccc",
-  color: "#000",
-  height: "44.5px",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#bbb",
-  },
 };
 
 const resetPasswordButtonStyle = {

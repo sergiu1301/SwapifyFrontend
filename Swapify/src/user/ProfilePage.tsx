@@ -44,6 +44,7 @@ const ProfilePage: React.FC = () => {
         lastName: userProfile?.lastName || "",
         email: userProfile?.email || "",
         phone: userProfile?.phoneNumber || "",
+        userName: userProfile?.userName || "",
     });
 
     React.useEffect(() => {
@@ -53,11 +54,12 @@ const ProfilePage: React.FC = () => {
                 lastName: userProfile.lastName || "",
                 email: userProfile.email || "",
                 phone: userProfile.phoneNumber || "",
+                userName: userProfile.userName || "",
             });
         }
     }, [userProfile]);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_: React.SyntheticEvent ,newValue: number) => {
         setTabValue(newValue);
     };
 
@@ -117,9 +119,11 @@ const ProfilePage: React.FC = () => {
                         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <Typography variant="h6">Personal Information</Typography>
                             {!isEditing ? (
-                                <IconButton sx={editButtonStyle} onClick={() => setIsEditing(true)}>
-                                    <EditIcon />
-                                </IconButton>
+                                <Box>
+                                    <IconButton sx={editButtonStyle} onClick={() => setIsEditing(true)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Box>
                             ) : (
                                 <Box>
                                     <Button onClick={handleCancelEdit} sx={{ mr: 1, color: "#ccc" }}>Cancel</Button>
@@ -149,60 +153,99 @@ const ProfilePage: React.FC = () => {
                             {isEditing ? (
                                 <>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>First Name: </Typography>
+                                        <Typography>First name: </Typography>
                                         <TextField
-                                            label="First name"
-                                            variant="outlined"
+                                            variant="standard"
                                             value={editData.firstName}
-                                            sx={{ width: "250px" }}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
                                             onChange={(e) => setEditData({ ...editData, firstName: e.target.value })}
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Last Name: </Typography>
+                                        <Typography>Last name: </Typography>
                                     <TextField
-                                        label="Last name"
-                                        variant="outlined"
+                                        variant="standard"
                                         value={editData.lastName}
-                                        sx={{ width: "250px" }}
+                                        sx={{ width: "250px", marginLeft:"8px"}}
                                         onChange={(e) => setEditData({ ...editData, lastName: e.target.value })}
                                     />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
                                         <Typography>Email: </Typography>
                                         <TextField
-                                            label="Email"
-                                            variant="outlined"
+                                            variant="standard"
                                             value={editData.email}
-                                            sx={{ width: "250px", '& .MuiInput-underline:before': {
-                                                    borderBottomColor: '#555',
-                                                },
-                                                '& .MuiInput-underline:hover:before': {
-                                                    borderBottomColor: '#888',
-                                                },
-                                                '& .MuiInput-underline:after': {
-                                                    borderBottomColor: '#3CB371',
-                                                },}}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
                                             onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                                            inputProps={{readOnly:true}}
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                                        <Typography>Username: </Typography>
+                                        <TextField
+                                            variant="standard"
+                                            value={editData.userName}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
+                                            onChange={(e) => setEditData({ ...editData, userName: e.target.value })}
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                                         <Typography>Phone: </Typography>
                                         <TextField
-                                            variant="outlined"
+                                            variant="standard"
                                             value={editData.phone}
-                                            sx={{ width: "250px" }}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
                                             onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
                                         />
                                     </Box>
                                 </>
                             ) : (
                                 <>
-                                    <Typography>First name: <b>{editData.firstName || "-"}</b></Typography>
-                                    <Typography>Last name: <b>{editData.lastName || "-"}</b></Typography>
-                                    <Typography>Email: <b>{editData.email || "-"}</b></Typography>
-                                    <Typography>Email: <b>{editData.userName || "-"}</b></Typography>
-                                    <Typography>Phone: <b>{editData.phone || "-"}</b></Typography>
+                                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                                        <Typography>First name: </Typography>
+                                        <TextField
+                                            variant="standard"
+                                            value={editData.firstName}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
+                                            inputProps={{readOnly:true}}
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                                        <Typography>Last name: </Typography>
+                                        <TextField
+                                            variant="standard"
+                                            value={editData.lastName}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
+                                            inputProps={{readOnly:true}}
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                                        <Typography>Email: </Typography>
+                                        <TextField
+                                            variant="standard"
+                                            value={editData.email}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
+                                            inputProps={{readOnly:true}}
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                                        <Typography>Username: </Typography>
+                                        <TextField
+                                            variant="standard"
+                                            value={editData.userName}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
+                                            inputProps={{readOnly:true}}
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                                        <Typography>Phone: </Typography>
+                                        <TextField
+                                            variant="standard"
+                                            value={editData.phone}
+                                            sx={{ width: "250px", marginLeft:"8px"}}
+                                            inputProps={{readOnly:true}}
+                                        />
+                                    </Box>
                                 </>
                             )}
                         </Box>

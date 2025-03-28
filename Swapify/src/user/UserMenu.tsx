@@ -20,12 +20,6 @@ import { useUserProfile } from "../UserProfileProvider";
 import { useWebSocket } from "../WebSocketProvider";
 import { useNavigate } from "react-router-dom";
 
-interface UserProfile {
-    userName?: string;
-    email?: string;
-    avatarUrl?: string;
-}
-
 const UserMenu: React.FC = () => {
     const { userProfile } = useUserProfile();
     const { logout } = useWebSocket();
@@ -72,7 +66,7 @@ const UserMenu: React.FC = () => {
                 onClose={handleCloseMenu}
                 PaperProps={{
                     sx: {
-                        backgroundColor: "#1e1e1e", // fundal întunecat
+                        backgroundColor: "#1e1e1e",
                         color: "#fff",
                         width: 350,
                         mt: 1

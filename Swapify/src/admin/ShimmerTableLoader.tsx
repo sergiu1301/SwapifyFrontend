@@ -1,6 +1,5 @@
 import {
     Box,
-    Checkbox,
     IconButton,
     Skeleton,
     Table,
@@ -12,7 +11,6 @@ import {
 } from "@mui/material";
 import BlockIcon from "@mui/icons-material/Block";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React from "react";
 
 const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
     return (
@@ -41,7 +39,6 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
             <Table>
                 <TableHead>
                     <TableRow sx={{ backgroundColor: "#333" }}>
-                        <TableCell sx={{ color: "#fff" }} />
                         <TableCell sx={{ color: "#fff" }}>Member</TableCell>
                         <TableCell sx={{ color: "#fff" }}>Status</TableCell>
                         <TableCell sx={{ color: "#fff" }}>Role</TableCell>
@@ -49,9 +46,6 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
                         <TableCell sx={{ color: "#fff" }} align="right">Actions</TableCell>
                     </TableRow>
                     <TableRow sx={{ visibility: "collapse" }}>
-                        <TableCell>
-                            <Checkbox />
-                        </TableCell>
                         <TableCell>averyaddress@exampledomain.com</TableCell>
                         <TableCell>
                             <Box
@@ -81,10 +75,7 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
                     {Array.from({ length: rows }).map((_, index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Skeleton variant="rectangular" width={42} height={42} animation="wave" />
-                            </TableCell>
-                            <TableCell>
-                                <Skeleton variant="text" width="80%" height={42} animation="wave" />
+                                <Skeleton variant="rectangular" width="80%" height={42} animation="wave" />
                             </TableCell>
                             <TableCell>
                                 <Skeleton variant="rounded" width="60%" height={42} animation="wave" />
