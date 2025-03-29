@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
+import {useGetTheme} from "../hooks/useGetTheme.ts";
 
 interface SidebarProps {
     context: "individuals" | "roles";
@@ -9,30 +10,27 @@ interface SidebarProps {
 const sidebarButtonActive = {
     textTransform: "unset",
     justifyContent: "flex-start",
-    color: "#fff",
-    backgroundColor: "#3b3b3b",
     marginBottom: "8px",
 };
 
 const sidebarButtonInactive = {
     textTransform: "unset",
     justifyContent: "flex-start",
-    color: "#ccc",
     backgroundColor: "transparent",
     marginBottom: "8px",
-    "&:hover": {
-        backgroundColor: "#444",
-    },
+    boxShadow: "none",
+    border: "none",
 };
-
 const Sidebar: React.FC<SidebarProps> = ({ context, handleButtonClick }) => {
+    const theme=useGetTheme()
     return (
         <Grid
             item
             xs={12}
             md={2}
             sx={{
-                backgroundColor: "#2a2a2a",
+                // backgroundColor: theme==="dark" ? "#2a2a2a" : "#e6e6e6",
+                borderRight: theme==="light" ? "2px solid #e1af33" : "2px solid #1a1a1a",
                 display: "flex",
                 flexDirection: "column",
                 padding: "16px",
@@ -46,14 +44,13 @@ const Sidebar: React.FC<SidebarProps> = ({ context, handleButtonClick }) => {
                 />
                 <Typography variant="h6">Swapify</Typography>
             </Box>
-
             <Typography variant="h6" sx={{ marginBottom: 3 }}>
                 Manage
             </Typography>
-
             <Button
                 onClick={() => handleButtonClick("individuals")}
                 sx={context === "individuals" ? sidebarButtonActive : sidebarButtonInactive}
+                style={{color:theme==="light" && context !== "individuals" ?  "#2b2b2b" : "#fefdfb"}}
             >
                 Individuals
             </Button>
@@ -61,6 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ context, handleButtonClick }) => {
             <Button
                 onClick={() => handleButtonClick("roles")}
                 sx={context === "roles" ? sidebarButtonActive : sidebarButtonInactive}
+                style={{color:theme==="light" && context !== "roles" ?  "#2b2b2b" : "#fefdfb"}}
             >
                 Roles
             </Button>

@@ -1,12 +1,18 @@
 import React from "react";
-import { AppBar, Toolbar } from "@mui/material";
+import {AppBar, Theme, Toolbar} from "@mui/material";
 import UserMenu from "../user/UserMenu";
 
-const Topbar: React.FC = () => {
+interface TopbarProps {
+    setShouldRefetchTheme:(val:boolean)=>void
+    shouldRefetchTheme:boolean
+    theme:Theme
+}
+
+const Topbar: React.FC<TopbarProps> = ({setShouldRefetchTheme,shouldRefetchTheme,theme}) => {
     return (
-        <AppBar position="static" sx={{ backgroundColor: "#000", alignItems: "end" }}>
+        <AppBar position="static" sx={{alignItems: "end" }}>
             <Toolbar>
-                <UserMenu />
+                <UserMenu setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/>
             </Toolbar>
         </AppBar>
     );

@@ -92,13 +92,13 @@ const NewPassword: React.FC = () => {
         );
 
         if (!response.ok) {
-          navigate("/no-success-notification?typePage=ResetPassword");
+          navigate("/no-success-notification?type=reset-password");
           throw new Error("Failed to set new password");
         }
-        navigate("/success-notification?typePage=ResetPassword");
+        navigate("/success-notification?type=reset-password");
       } catch (error) {
         console.error("Error setting new password:", error);
-        navigate("/no-success-notification?typePage=ResetPassword");
+        navigate("/no-success-notification?type=reset-password");
         throw error;
       } finally {
         setLoading(false);
@@ -248,14 +248,9 @@ const setPasswordButtonStyle = {
   width: "100%",
   padding: "10px",
   marginBottom: "10px",
-  backgroundColor: "#2E8B57",
-  color: "#fff",
   border: "none",
   borderRadius: "5px",
   cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#3CB371",
-  },
 };
 
 const boxSection = {

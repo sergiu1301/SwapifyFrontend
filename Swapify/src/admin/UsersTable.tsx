@@ -21,7 +21,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import BlockIcon from "@mui/icons-material/Block";
 import SearchIcon from "@mui/icons-material/Search";
-import ShimmerTableLoader from "./ShimmerTableLoader";
+import ShimmerUsersTableLoader from "./ShimmerUsersTableLoader.tsx";
+import {useGetTheme} from "../hooks/useGetTheme.ts";
 
 interface User {
     userId: string;
@@ -79,13 +80,13 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                    getSelectedRole,
                                                    highlightSearchText,
                                                }) => {
+const theme=useGetTheme();
     return (
-        <Paper elevation={10} sx={{ backgroundColor: "#2a2a2a", padding: "16px", flex: 1 }}>
+        <Paper elevation={10} sx={{ padding: "16px", flex: 1 }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                 <Typography variant="h5">Individuals</Typography>
                 <Button
                     variant="contained"
-                    sx={{ textTransform: "unset", padding: "10px", backgroundColor: "#2E8B57", color: "#fff" }}
                     onClick={() => alert("Invite people")}
                 >
                     Invite people
@@ -109,9 +110,10 @@ const UsersTable: React.FC<UsersTableProps> = ({
             </Box>
 
             {isLoading ? (
-                <ShimmerTableLoader rows={rowsPerPage} />
+                <ShimmerUsersTableLoader rows={rowsPerPage} />
             ) : isError ? (
-                <Box sx={{ color: "white", textAlign: "center", marginTop: "2rem" }}>
+
+                <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
                     <Typography variant="h6" color="error">
                         Error fetching data
                     </Typography>
@@ -123,31 +125,16 @@ const UsersTable: React.FC<UsersTableProps> = ({
                             xs: "auto",
                             md: "calc(100vh - 280px)",
                         },
-                        "&::-webkit-scrollbar": {
-                            width: "8px",
-                            height: "8px",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            backgroundColor: "#555",
-                            borderRadius: "8px",
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                            backgroundColor: "#888",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                            backgroundColor: "#2a2a2a",
-                        },
                         scrollbarWidth: "thin",
-                        scrollbarColor: "#555 #2a2a2a",
                     }}>
                         <Table stickyHeader>
                             <TableHead>
-                                <TableRow sx={{ backgroundColor: "#333" }}>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Member</TableCell>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Status</TableCell>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Role</TableCell>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Phone</TableCell>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }} align="right">
+                                <TableRow>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Member</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Status</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Role</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Phone</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">
                                         Actions
                                     </TableCell>
                                 </TableRow>
@@ -170,8 +157,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                             exampleOfStatus
                                         </Box>
                                     </TableCell>
-                                    <TableCell>exampleOfRoleName</TableCell>
-                                    <TableCell>00000000000000000</TableCell>
+                                    <TableCell>exampleOfRole</TableCell>
+                                    <TableCell>12345678901234</TableCell>
                                     <TableCell align="right">
                                         <IconButton><BlockIcon /></IconButton>
                                         <IconButton><DeleteIcon /></IconButton>
@@ -192,12 +179,12 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                 cursor: "pointer",
                                                 transition: "background-color 0.2s ease",
                                                 "&:hover": {
-                                                    backgroundColor: "#3b3b3b",
+                                                    backgroundColor: theme==="dark" ? "#3b3b3b" : "#f9f0d8",
                                                 },
                                             }}
                                         >
                                             <TableCell
-                                                sx={{ color: "#fff", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "default" }}
+                                                sx={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "default" }}
                                                 title={user.email}
                                             >
                                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -237,10 +224,10 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                     ))}
                                                 </Select>
                                             </TableCell>
-                                            <TableCell sx={{ color: "#fff" }}>
+                                            <TableCell>
                                                 {user.phoneNumber || "-"}
                                             </TableCell>
-                                            <TableCell align="right" sx={{ color: "#fff" }}>
+                                            <TableCell align="right">
                                                 {user.lockoutEnd === null ? (
                                                     <IconButton
                                                         sx={blockButtonStyle}
@@ -282,7 +269,6 @@ const UsersTable: React.FC<UsersTableProps> = ({
 
                     <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2, alignItems: "center" }}>
                         <TablePagination
-                            sx={{ color: "#fff" }}
                             rowsPerPageOptions={[10, 25, 50]}
                             component="div"
                             count={totalUsers}
@@ -300,12 +286,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
 
 const blockButtonStyle = {
     backgroundColor: "transparent",
-    color: "#ccc",
     cursor: "pointer",
     alignContent: "center",
-    "&:hover": {
-        color: "#fff",
-    },
 };
 
 const blockRedButtonStyle = {

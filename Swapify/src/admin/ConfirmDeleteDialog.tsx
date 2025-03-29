@@ -42,7 +42,7 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary">
+                <Button onClick={onClose} variant="outlined">
                     Cancel
                 </Button>
                 <Button onClick={onConfirm} color="primary" disabled={!email}>

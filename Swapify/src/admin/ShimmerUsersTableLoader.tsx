@@ -11,39 +11,26 @@ import {
 } from "@mui/material";
 import BlockIcon from "@mui/icons-material/Block";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useGetTheme} from "../hooks/useGetTheme.ts";
 
-const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
+const ShimmerUsersTableLoader = ({ rows = 6 }: { rows?: number }) => {
+    const theme=useGetTheme();
     return (
         <TableContainer sx={{ overflow: "auto",
             maxHeight: {
                 xs: "auto",
                 md: "calc(100vh - 280px)",
             },
-            "&::-webkit-scrollbar": {
-                width: "8px",
-                height: "8px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#555",
-                borderRadius: "8px",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: "#888",
-            },
-            "&::-webkit-scrollbar-track": {
-                backgroundColor: "#2a2a2a",
-            },
             scrollbarWidth: "thin",
-            scrollbarColor: "#555 #2a2a2a",
         }}>
-            <Table>
+            <Table stickyHeader>
                 <TableHead>
-                    <TableRow sx={{ backgroundColor: "#333" }}>
-                        <TableCell sx={{ color: "#fff" }}>Member</TableCell>
-                        <TableCell sx={{ color: "#fff" }}>Status</TableCell>
-                        <TableCell sx={{ color: "#fff" }}>Role</TableCell>
-                        <TableCell sx={{ color: "#fff" }}>Last login</TableCell>
-                        <TableCell sx={{ color: "#fff" }} align="right">Actions</TableCell>
+                    <TableRow>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Member</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Status</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Role</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Phone</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">Actions</TableCell>
                     </TableRow>
                     <TableRow sx={{ visibility: "collapse" }}>
                         <TableCell>averyaddress@exampledomain.com</TableCell>
@@ -63,8 +50,8 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
                                 exampleOfStatus
                             </Box>
                         </TableCell>
-                        <TableCell>exampleOfRoleName</TableCell>
-                        <TableCell>00000000000000000</TableCell>
+                        <TableCell>exampleOfRole</TableCell>
+                        <TableCell>12345678901234</TableCell>
                         <TableCell align="right">
                             <IconButton><BlockIcon /></IconButton>
                             <IconButton><DeleteIcon /></IconButton>
@@ -75,7 +62,7 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
                     {Array.from({ length: rows }).map((_, index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Skeleton variant="rectangular" width="80%" height={42} animation="wave" />
+                                <Skeleton variant="rounded" width="80%" height={42} animation="wave" />
                             </TableCell>
                             <TableCell>
                                 <Skeleton variant="rounded" width="60%" height={42} animation="wave" />
@@ -84,7 +71,7 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
                                 <Skeleton variant="text" width="70%" height={42} animation="wave" />
                             </TableCell>
                             <TableCell>
-                                <Skeleton variant="text" width="50%" height={42} animation="wave" />
+                                <Skeleton variant="text" width="70%" height={42} animation="wave" />
                             </TableCell>
                             <TableCell align="left">
                                 <Skeleton variant="rectangular" width={60} height={42} animation="wave" sx={{ ml: "auto" }} />
@@ -97,4 +84,4 @@ const ShimmerTableLoader = ({ rows = 6 }: { rows?: number }) => {
     );
 };
 
-export default ShimmerTableLoader;
+export default ShimmerUsersTableLoader;

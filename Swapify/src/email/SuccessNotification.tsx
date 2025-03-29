@@ -10,7 +10,7 @@ const SuccessNotification: React.FC = () => {
     const fetchData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
-        const typePageFromUrl = searchParams.get("typePage");
+        const typePageFromUrl = searchParams.get("type");
 
         if (!typePageFromUrl) {
           throw new Error("Page not found");
@@ -32,7 +32,7 @@ const SuccessNotification: React.FC = () => {
           sx={{ ...paperSection, ...emailConfirmedContainerStyle }}
           elevation={10}
         >
-          {typePage === "ConfirmEmail" && (
+          {typePage === "confirm-email" && (
             <Typography
               style={{
                 fontSize: "23px",
@@ -42,7 +42,7 @@ const SuccessNotification: React.FC = () => {
               Your email is confirmed
             </Typography>
           )}
-          {typePage === "ResetPassword" && (
+          {typePage === "reset-password" && (
             <Typography
               style={{
                 fontSize: "23px",
@@ -89,16 +89,11 @@ const lineUpStyle = {
 const loginButtonStyle = {
   textTransform: "unset",
   backgroundColor: "transparent",
-  color: "#2E8B57",
   textAlign: "right",
   width: "150px",
   cursor: "pointer",
   fontSize: "15px",
   marginTop: "7px",
-  "&:hover": {
-    backgroundColor: "transparent",
-    color: "#1F6D42",
-  },
 };
 
 const boxSection = {

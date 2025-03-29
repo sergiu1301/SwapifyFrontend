@@ -1,15 +1,6 @@
 import React from "react";
-import {
-    Box,
-    Typography,
-    Tabs,
-    Tab,
-    Paper,
-    IconButton,
-    TextField,
-    Button
-} from "@mui/material";
-import { useUserProfile } from "../UserProfileProvider";
+import {Box, Button, Divider, IconButton, Paper, Tab, Tabs, TextField, Typography} from "@mui/material";
+import {useUserProfile} from "../UserProfileProvider";
 import EditIcon from "@mui/icons-material/Edit";
 
 function TabPanel(props: { children?: React.ReactNode; value: number; index: number }) {
@@ -79,8 +70,6 @@ const ProfilePage: React.FC = () => {
         <Box
             sx={{
                 height: "100vh",
-                backgroundColor: "#1e1e1e",
-                color: "#fff",
                 display: "flex",
                 flexDirection: "column",
             }}
@@ -91,49 +80,42 @@ const ProfilePage: React.FC = () => {
             </Box>
 
             {/* Taburi: Details | Security | Access */}
-            <Box sx={{ borderBottom: 1, borderColor: "#333", px: 2 }}>
+            <Box>
                 <Tabs
                     value={tabValue}
                     onChange={handleTabChange}
-                    textColor="inherit"
-                    TabIndicatorProps={{ style: { backgroundColor: "#3CB371" } }} // culoare indicator
+                    TabIndicatorProps={{ style: { backgroundColor: "#daa520" } }} // culoare indicator
                 >
                     <Tab label="Details" />
                     <Tab label="Security" />
                     <Tab label="Access" />
                 </Tabs>
             </Box>
-
+            <Divider/>
             {/* Conținutul fiecărui tab */}
             <Box sx={{ flex: 1, display: "flex", flexDirection: "column", maxHeight: "100vh" }}>
                 {/* TAB 0: DETAILS */}
                 <TabPanel value={tabValue} index={0}>
                     <Paper
                         sx={{
-                            backgroundColor: "#2a2a2a",
                             p: 2,
                             borderRadius: 1,
                         }}
                         elevation={3}
                     >
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", minHeight:"40px"}}>
                             <Typography variant="h6">Personal Information</Typography>
                             {!isEditing ? (
                                 <Box>
-                                    <IconButton sx={editButtonStyle} onClick={() => setIsEditing(true)}>
+                                    <IconButton onClick={() => setIsEditing(true)}>
                                         <EditIcon />
                                     </IconButton>
                                 </Box>
                             ) : (
                                 <Box>
-                                    <Button onClick={handleCancelEdit} sx={{ mr: 1, color: "#ccc" }}>Cancel</Button>
+                                    <Button onClick={handleCancelEdit} variant="outlined" sx={{ mr: 1 }}>Cancel</Button>
                                     <Button
                                         variant="contained"
-                                        sx={{
-                                            backgroundColor: "#3CB371",
-                                            textTransform: "none",
-                                            "&:hover": { backgroundColor: "#2E8B57" },
-                                        }}
                                         onClick={handleSaveEdit}
                                     >
                                         Save
@@ -153,7 +135,7 @@ const ProfilePage: React.FC = () => {
                             {isEditing ? (
                                 <>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>First name: </Typography>
+                                        <Typography sx={{width:"85px"}}>First name: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.firstName}
@@ -162,7 +144,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Last name: </Typography>
+                                        <Typography sx={{width:"85px"}}>Last name: </Typography>
                                     <TextField
                                         variant="standard"
                                         value={editData.lastName}
@@ -171,7 +153,7 @@ const ProfilePage: React.FC = () => {
                                     />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Email: </Typography>
+                                        <Typography sx={{width:"85px"}}>Email: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.email}
@@ -181,7 +163,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Username: </Typography>
+                                        <Typography sx={{width:"85px"}}>Username: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.userName}
@@ -190,7 +172,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                                        <Typography>Phone: </Typography>
+                                        <Typography sx={{width:"85px"}}>Phone: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.phone}
@@ -202,7 +184,7 @@ const ProfilePage: React.FC = () => {
                             ) : (
                                 <>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>First name: </Typography>
+                                        <Typography sx={{width:"85px"}}>First name: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.firstName}
@@ -211,7 +193,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Last name: </Typography>
+                                        <Typography sx={{width:"85px"}}>Last name: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.lastName}
@@ -220,7 +202,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Email: </Typography>
+                                        <Typography sx={{width:"85px"}}>Email: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.email}
@@ -229,7 +211,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <Typography>Username: </Typography>
+                                        <Typography sx={{width:"85px"}}>Username: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.userName}
@@ -238,7 +220,7 @@ const ProfilePage: React.FC = () => {
                                         />
                                     </Box>
                                     <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                                        <Typography>Phone: </Typography>
+                                        <Typography sx={{width:"85px"}}>Phone: </Typography>
                                         <TextField
                                             variant="standard"
                                             value={editData.phone}
@@ -256,7 +238,6 @@ const ProfilePage: React.FC = () => {
                 <TabPanel value={tabValue} index={1}>
                     <Paper
                         sx={{
-                            backgroundColor: "#2a2a2a",
                             p: 2,
                             borderRadius: 1,
                         }}
@@ -275,7 +256,6 @@ const ProfilePage: React.FC = () => {
                 <TabPanel value={tabValue} index={2}>
                     <Paper
                         sx={{
-                            backgroundColor: "#2a2a2a",
                             p: 2,
                             borderRadius: 1,
                         }}
@@ -284,24 +264,40 @@ const ProfilePage: React.FC = () => {
                         <Typography variant="h6" sx={{ mb: 2 }}>
                             Access
                         </Typography>
-                        <Typography>
-                            Aici poți afișa drepturile de acces, permisiunile userului, etc.
-                        </Typography>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 2,
+                                mt: 2
+                            }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                <Typography sx={{width:"125px"}}>Role Name: </Typography>
+                                <TextField
+                                    variant="standard"
+                                    value={userProfile?.roleName}
+                                    sx={{ width: "250px", marginLeft:"8px"}}
+                                    inputProps={{readOnly:true}}
+                                />
+                            </Box>
+
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                <Typography sx={{width:"125"}}>Role Description: </Typography>
+                                <TextField
+                                    variant="standard"
+                                    value={userProfile?.roleDescription}
+                                    sx={{ width: "250px", marginLeft:"8px"}}
+                                    inputProps={{readOnly:true}}
+                                />
+                            </Box>
+                        </Box>
                     </Paper>
                 </TabPanel>
             </Box>
         </Box>
     );
-};
-
-const editButtonStyle = {
-    backgroundColor: "transparent",
-    color: "#ccc",
-    cursor: "pointer",
-    alignContent: "center",
-    "&:hover": {
-        color: "#fff",
-    },
 };
 
 export default ProfilePage;

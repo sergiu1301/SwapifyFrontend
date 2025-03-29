@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Box, Grid, SelectChangeEvent, Typography} from "@mui/material";
+import {Box, Grid, SelectChangeEvent, Theme, Typography} from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUserProfile } from "../UserProfileProvider";
 import useUsersQuery from "../hooks/useUsersQuery";
@@ -13,7 +13,13 @@ import RoleDialog from "./RoleDialog";
 import { useQueryClient } from "react-query";
 import ProfilePage from "../user/ProfilePage.tsx";
 
-const DashboardAdmin = () => {
+interface DashboardAdminProps {
+    setShouldRefetchTheme:(val:boolean)=>void
+    shouldRefetchTheme:boolean
+    theme:Theme
+}
+
+const DashboardAdmin:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,shouldRefetchTheme,theme}) => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { userProfile } = useUserProfile();
@@ -32,6 +38,7 @@ const DashboardAdmin = () => {
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const [confirmationEmail, setConfirmationEmail] = useState("");
     const [userToDelete, setUserToDelete] = useState<string | null>(null);
+    const [roleToDelete, setRoleToDelete] = useState<string | null>(null);
 
     const [openRoleDialog, setOpenRoleDialog] = useState(false);
     const [editRole, setEditRole] = useState(false);
@@ -47,7 +54,7 @@ const DashboardAdmin = () => {
         enabled: context === "individuals",
     });
 
-    const { data: roleData, isLoading: isRolesLoading } = useRolesQuery({ enabled: true });
+    const { data: roleData, isLoading: isRolesLoading, isError: isRolesError } = useRolesQuery({ enabled: true });
 
     const token = localStorage.getItem("jwtToken");
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -174,7 +181,7 @@ const DashboardAdmin = () => {
             <Typography>
                 {parts.map((part, index) =>
                         part.toLowerCase() === query.toLowerCase() ? (
-                            <span key={index} style={{ backgroundColor: "#c8e6c9" }}>
+                            <span key={index} style={{ backgroundColor: "#f4e3b6" }}>
               {part}
             </span>
                         ) : (
@@ -196,18 +203,34 @@ const DashboardAdmin = () => {
         setOpenConfirmDialog(true);
     };
 
+    const handleRemoveRole = async (roleName: string) => {
+        setRoleToDelete(roleName);
+        setOpenConfirmDialog(true);
+    };
+
     const handleCloseConfirmDialog = () => {
         setOpenConfirmDialog(false);
         setUserToDelete(null);
         setConfirmationEmail("");
     };
 
-    const handleConfirmDelete = async () => {
+    const handleConfirmUserDelete = async () => {
         if (userProfile?.email === confirmationEmail) {
             if (userToDelete) {
                 await fetchDeleteUser(userToDelete);
             }
             setUserToDelete(null);
+            setOpenConfirmDialog(false);
+            setConfirmationEmail("");
+        }
+    };
+
+    const handleConfirmRoleDelete = async () => {
+        if (userProfile?.email === confirmationEmail) {
+            if (roleToDelete) {
+                await fetchDeleteRole(roleToDelete);
+            }
+            setRoleToDelete(null);
             setOpenConfirmDialog(false);
             setConfirmationEmail("");
         }
@@ -246,29 +269,21 @@ const DashboardAdmin = () => {
     };
 
     const currentType = searchParams.get("type");
-
     return (
-        <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "#1e1e1e", color: "#fff", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ width: "100vw", height: "100vh", color: "#fff", display: "flex", flexDirection: "column" }}>
             <Grid container sx={{ flex: 1, overflow: {xs: "auto", md: "hidden", "&::-webkit-scrollbar": {
                         width: "8px",
                         height: "8px",
                     },
                     "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "#555",
                         borderRadius: "8px",
                     },
-                    "&::-webkit-scrollbar-thumb:hover": {
-                        backgroundColor: "#888",
-                    },
-                    "&::-webkit-scrollbar-track": {
-                        backgroundColor: "#2a2a2a",
-                    },
                     scrollbarWidth: "thin",
-                    scrollbarColor: "#555 #2a2a2a"} }}>
+                    scrollbarColor:  theme.palette.mode === "dark" ? "#555 #2a2a2a" : ""} }}>
                 <Sidebar context={context} handleButtonClick={handleButtonClick} />
 
                 <Grid item xs={12} md={10} sx={{ display: "flex", flexDirection: "column", overflow: "auto" }}>
-                    <Topbar />
+                    <Topbar setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/>
 
                     {currentType === "profile" && (
                         <ProfilePage />
@@ -300,9 +315,10 @@ const DashboardAdmin = () => {
                         <RolesTable
                             roles={roleData?.roles || []}
                             isLoading={isRolesLoading}
+                            isError={isRolesError}
                             onAddNewRole={handleAddNewRole}
                             onEditRole={handleShowDialogEditRole}
-                            onRemoveRole={fetchDeleteRole}
+                            onRemoveRole={handleRemoveRole}
                         />
                     )}
                 </Grid>
@@ -313,11 +329,20 @@ const DashboardAdmin = () => {
                 email={confirmationEmail}
                 onEmailChange={(e) => setConfirmationEmail(e.target.value)}
                 onClose={handleCloseConfirmDialog}
-                onConfirm={handleConfirmDelete}
+                onConfirm={handleConfirmUserDelete}
+            />
+
+            <ConfirmDeleteDialog
+                open={openConfirmDialog}
+                email={confirmationEmail}
+                onEmailChange={(e) => setConfirmationEmail(e.target.value)}
+                onClose={handleCloseConfirmDialog}
+                onConfirm={handleConfirmRoleDelete}
             />
 
             <RoleDialog
                 open={openRoleDialog}
+                // open={true}
                 editMode={editRole}
                 roleName={roleName}
                 roleDescription={roleDescription}

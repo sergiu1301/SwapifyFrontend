@@ -156,7 +156,14 @@ const Login: React.FC = () => {
             >
               {loading ? "Logging in..." : "Log in"}
             </Button>
-            <Box style={{ marginTop: "10px" }}>
+            <Box style={{ display: "flex", alignItems: "center" }}>
+              <Divider sx={{ flexGrow: 1 }} />
+              <Typography sx={{ mx: 2, color: "text.secondary" }}>
+                or
+              </Typography>
+              <Divider sx={{ flexGrow: 1 }} />
+            </Box>
+            <Box style={{ marginTop: "4px" }}>
               <Link to="/forgot-password" style={{ textDecoration: "none" }}>
                 <Button
                   color="primary"
@@ -168,17 +175,11 @@ const Login: React.FC = () => {
               </Link>
               <Link to="/register" style={{ textDecoration: "none" }}>
                 <Button color="primary" variant="text" sx={signUpButtonStyle}>
-                  Sign up for Visi
+                  Sign up
                 </Button>
               </Link>
             </Box>
-            <Box style={{ display: "flex", alignItems: "center" }}>
-              <Divider sx={{ flexGrow: 1 }} />
-              <Typography sx={{ mx: 2, color: "text.secondary" }}>
-                or
-              </Typography>
-              <Divider sx={{ flexGrow: 1 }} />
-            </Box>
+
           </Box>
         </Paper>
       </Grid>
@@ -199,44 +200,29 @@ const loginButtonStyle = {
   width: "100%",
   padding: "10px",
   marginBottom: "10px",
-  backgroundColor: "#2E8B57",
-  color: "#fff",
   border: "none",
   borderRadius: "5px",
   cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#3CB371",
-  },
 };
 
 const forgotPasswordButtonStyle = {
   textTransform: "unset",
   fontSize: "13px",
   backgroundColor: "transparent",
-  color: "#2E8B57",
   textAlign: "right",
   width: "150px",
   paddingRight: "0",
   cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "transparent",
-    color: "#3CB371",
-  },
 };
 
 const signUpButtonStyle = {
   textTransform: "unset",
   fontSize: "13px",
   backgroundColor: "transparent",
-  color: "#2E8B57",
   textAlign: "left",
   width: "150px",
   paddingLeft: "0",
   cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "transparent",
-    color: "#3CB371",
-  },
 };
 
 const lineUpStyle = {

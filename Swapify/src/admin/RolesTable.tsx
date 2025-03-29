@@ -14,7 +14,8 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import GridLoader from "react-spinners/GridLoader";
+import {useGetTheme} from "../hooks/useGetTheme.ts";
+import ShimmerRolesTableLoader from "./ShimmerRolesTableLoader.tsx";
 
 interface Role {
     roleId: string;
@@ -25,6 +26,7 @@ interface Role {
 interface RolesTableProps {
     roles: Role[];
     isLoading: boolean;
+    isError: boolean;
     onAddNewRole: () => void;
     onEditRole: (id: string, name: string, desc: string) => void;
     onRemoveRole: (name: string) => void;
@@ -33,73 +35,67 @@ interface RolesTableProps {
 const RolesTable: React.FC<RolesTableProps> = ({
                                                    roles,
                                                    isLoading,
+                                                   isError,
                                                    onAddNewRole,
                                                    onEditRole,
-                                                   onRemoveRole,
-                                               }) => {
-    const override = {
-        display: "block",
-        margin: "0 auto",
-        borderColor: "red",
-    };
+                                                   onRemoveRole}) => {
 
+const theme=useGetTheme();
     return (
-        <Paper elevation={10} sx={{ backgroundColor: "#2a2a2a", padding: "16px", flex: 1 }}>
-            {isLoading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
-                    <GridLoader color="#3CB371" loading={isLoading} cssOverride={override} size={20} />
-                </Box>
-            ) : (
-                <>
+        // <Paper elevation={10} sx={{ backgroundColor: "#2a2a2a", padding: "16px", flex: 1 }}>
+        <Paper elevation={10} sx={{ padding: "16px", flex: 1 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                         <Typography variant="h5">Roles</Typography>
                         <Button
                             variant="contained"
-                            sx={{ textTransform: "unset", padding: "10px", backgroundColor: "#2E8B57", color: "#fff" }}
+                            sx={{ textTransform: "unset" }}
                             onClick={onAddNewRole}
                         >
                             Add new role
                         </Button>
                     </Box>
 
-                    <TableContainer sx={{overflow: "auto",
+                    {isLoading ? (
+                        <ShimmerRolesTableLoader rows={2} />
+                    ) : isError ? (
+
+                        <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
+                            <Typography variant="h6" color="error">
+                                Error fetching data
+                            </Typography>
+                        </Box>
+                    ) : (<TableContainer sx={{overflow: "auto",
                         maxHeight: {
                             xs: "auto",
                             md: "calc(100vh - 280px)",
                         },
-                        "&::-webkit-scrollbar": {
-                            width: "8px",
-                            height: "8px",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            backgroundColor: "#555",
-                            borderRadius: "8px",
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                            backgroundColor: "#888",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                            backgroundColor: "#2a2a2a",
-                        },
                         scrollbarWidth: "thin",
-                        scrollbarColor: "#555 #2a2a2a",
                     }}>
                         <Table stickyHeader>
                             <TableHead>
-                                <TableRow sx={{ backgroundColor: "#333" }}>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Id</TableCell>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Name</TableCell>
-                                    <TableCell sx={{ backgroundColor: "#333", color: "#fff" }}>Description</TableCell>
-                                    <TableCell align="right" sx={{ backgroundColor: "#333", color: "#fff" }}>Actions</TableCell>
+                                <TableRow>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Id</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Name</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Description</TableCell>
+                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">Actions</TableCell>
+                                </TableRow>
+                                <TableRow sx={{ visibility: "collapse" }}>
+                                    <TableCell>c50d8d05-ef5b-40fb-8ea2-45d3bfe67cf0</TableCell>
+                                    <TableCell>exampleOfRoleName</TableCell>
+                                    <TableCell>exampleOfRoleDescription</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton><EditIcon /></IconButton>
+                                        <IconButton><DeleteIcon /></IconButton>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {roles.map((role) => (
                                     <TableRow key={role.roleId}>
-                                        <TableCell sx={{ color: "#fff" }}>{role.roleId}</TableCell>
-                                        <TableCell sx={{ color: "#fff" }}>{role.name}</TableCell>
-                                        <TableCell sx={{ color: "#fff" }}>{role.description}</TableCell>
-                                        <TableCell align="right" sx={{ color: "#fff" }}>
+                                        <TableCell>{role.roleId}</TableCell>
+                                        <TableCell>{role.name}</TableCell>
+                                        <TableCell>{role.description}</TableCell>
+                                        <TableCell align="right">
                                             <IconButton
                                                 onClick={() => onEditRole(role.roleId, role.name, role.description)}
                                             >
@@ -117,8 +113,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </>
-            )}
+                    )}
         </Paper>
     );
 };

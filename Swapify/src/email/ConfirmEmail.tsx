@@ -29,7 +29,7 @@ const ConfirmEmail: React.FC = () => {
         });
 
         if (!response.ok) {
-          navigate("/success-notification?typePage=ConfirmEmail");
+          navigate("/success-notification?type=confirm-email");
           throw new Error("Network response was not ok");
         }
 

@@ -9,7 +9,7 @@ const NoSuccessNotification: React.FC = () => {
     const fetchData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
-        const typePageFromUrl = searchParams.get("typePage");
+        const typePageFromUrl = searchParams.get("type");
 
         if (!typePageFromUrl) {
           throw new Error("Page not found");
@@ -31,7 +31,7 @@ const NoSuccessNotification: React.FC = () => {
           sx={{ ...paperSection, ...emailNotConfirmedContainerStyle }}
           elevation={10}
         >
-          {typePage === "ConfirmEmail" && (
+          {typePage === "confirm-email" && (
             <Typography
               style={{
                 fontSize: "23px",
@@ -41,7 +41,7 @@ const NoSuccessNotification: React.FC = () => {
               Your email is not confirmed
             </Typography>
           )}
-          {typePage === "ResetPassword" && (
+          {typePage === "reset-password" && (
             <Typography
               style={{
                 fontSize: "23px",

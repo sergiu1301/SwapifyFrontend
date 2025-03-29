@@ -7,8 +7,9 @@ import {
     DialogActions,
     TextField,
     Button,
+    IconButton,
 } from "@mui/material";
-
+import CloseIcon from '@mui/icons-material/Close';
 interface RoleDialogProps {
     open: boolean;
     editMode: boolean;
@@ -33,6 +34,17 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{editMode ? "Edit Role" : "Add New Role"}</DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={onClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
             <DialogContent>
                 <DialogContentText>
                     {editMode
@@ -58,18 +70,18 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                     value={roleDescription}
                     onChange={onRoleDescChange}
                 />
-                <DialogContentText>
-                    {editMode
-                        ? "If you want to edit the role, click the Edit button."
-                        : "If you want to add the new role, click the Save button."}
-                </DialogContentText>
+                {/*<DialogContentText>*/}
+                {/*    {editMode*/}
+                {/*        ? "If you want to edit the role, click the Edit button."*/}
+                {/*        : "If you want to add the new role, click the Save button."}*/}
+                {/*</DialogContentText>*/}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} sx={{ backgroundColor: "#ccc", color: "#000" }}>
+                <Button onClick={onClose} variant="outlined">
                     Cancel
                 </Button>
-                <Button onClick={onSave} sx={{ backgroundColor: "#2E8B57", color: "#fff" }}>
-                    {editMode ? "Edit" : "Save"}
+                <Button onClick={onSave}>
+                   Save
                 </Button>
             </DialogActions>
         </Dialog>

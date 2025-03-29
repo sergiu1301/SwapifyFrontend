@@ -10,7 +10,7 @@ const EmailNotification: React.FC = () => {
     const fetchData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
-        const typePageFromUrl = searchParams.get("typePage");
+        const typePageFromUrl = searchParams.get("type");
 
         if (!typePageFromUrl) {
           throw new Error("Page not found");
@@ -25,7 +25,7 @@ const EmailNotification: React.FC = () => {
     fetchData();
   }, []);
 
-  if (typePage == "ConfirmEmail" || typePage == "ResetPassword") {
+  if (typePage == "confirm-email" || typePage == "reset-password") {
     return (
       <Grid container spacing={2}>
         <Grid item sx={boxSection}>
@@ -48,7 +48,7 @@ const EmailNotification: React.FC = () => {
                   width: "auto",
                 }}
               >
-                {typePage == "ConfirmEmail" && "Thank you for signing up."}
+                {typePage == "confirm-email" && "Thank you for signing up."}
               </Typography>
               <Typography
                 style={{
@@ -58,15 +58,15 @@ const EmailNotification: React.FC = () => {
                   width: "auto",
                 }}
               >
-                {typePage == "ConfirmEmail" &&
+                {typePage == "confirm-email" &&
                   "An email for email verification has been successfully sent to your address. Please take a moment to check your inbox, as well as any spam or junk folders, to ensure you have received it."}
-                {typePage == "ResetPassword" &&
+                {typePage == "reset-password" &&
                   "A reset password email has been successfully sent to your address. Please take a moment to check your inbox, as well as any spam or junk folders, to ensure you have received it."}
               </Typography>
             </Box>
             <Box>
               <Link to="/" style={{ textDecoration: "none" }}>
-                <Button variant="text" sx={loginButtonStyle}>
+                <Button variant="text">
                   Back to login page
                 </Button>
               </Link>
@@ -84,20 +84,6 @@ const emailConfirmedContainerStyle = {
   borderRadius: "10px",
   textAlign: "center",
   boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",
-};
-
-const loginButtonStyle = {
-  textTransform: "unset",
-  backgroundColor: "transparent",
-  color: "#2E8B57",
-  textAlign: "right",
-  width: "150px",
-  cursor: "pointer",
-  fontSize: "15px",
-  "&:hover": {
-    backgroundColor: "transparent",
-    color: "#1F6D42",
-  },
 };
 
 const boxSection = {

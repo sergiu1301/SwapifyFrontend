@@ -1,16 +1,6 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  Typography,
-  TextField,
-  Button,
-  IconButton,
-  Divider,
-  Box,
-  InputAdornment,
-  Paper,
-  Grid,
-} from "@mui/material";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Box, Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography,} from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -102,7 +92,7 @@ const Register: React.FC = () => {
       });
 
       if (response.ok) {
-        navigate("/email-notification?typePage=ConfirmEmail");
+        navigate("/email-notification?type=confirm-email");
       }
 
       if (!response.ok) {
@@ -121,136 +111,134 @@ const Register: React.FC = () => {
     <Grid container spacing={2}>
       <Grid item sx={boxSection}>
         <Paper
-          sx={{ ...paperSection, ...registerContainerStyle }}
-          elevation={10}
+            sx={{...paperSection, ...registerContainerStyle}}
+            elevation={10}
         >
           <Typography
-            style={{
-              fontSize: "23px",
-              fontWeight: "bold",
-            }}
+              style={{
+                fontSize: "23px",
+                fontWeight: "bold",
+              }}
           >
             Create a new account
           </Typography>
-          <Divider sx={lineUpStyle} />
+          <Divider sx={lineUpStyle}/>
+
+          <span>
           <Box
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-          </Box>
-          <Box
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-            }}
-          >
-            <TextField
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              onBlur={() => validateEmail(email)}
-              label="Email"
-              fullWidth
-              error={!!emailError}
-              helperText={emailError}
-            />
-          </Box>
-          <Box
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              position: "relative",
-            }}
-          >
-            <TextField
-              type={isRevealPwd1 ? "text" : "password"}
-              value={password}
-              onChange={handlePasswordChange}
-              onBlur={() => validatePassword(password)}
-              label="Password"
-              fullWidth
-              error={!!passwordError}
-              helperText={passwordError}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {password.length > 0 && (
-                      <IconButton
-                        sx={eyeButtonStyle}
-                        onClick={() =>
-                          setIsRevealPwd1((prevState) => !prevState)
-                        }
-                      >
-                        {isRevealPwd1 ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                ),
+              style={{
+                width: "100%",
+                marginBottom: "20px",
               }}
-            />
-          </Box>
-          <Box
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              position: "relative",
-            }}
           >
             <TextField
-              type={isRevealPwd2 ? "text" : "password"}
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-              onBlur={() => validateConfirmPassword(password, confirmPassword)}
-              label="Confirm password"
-              fullWidth
-              error={!!confirmPasswordError}
-              helperText={confirmPasswordError}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {confirmPassword.length > 0 && (
-                      <IconButton
-                        sx={eyeButtonStyle}
-                        onClick={() =>
-                          setIsRevealPwd2((prevState) => !prevState)
-                        }
-                      >
-                        {isRevealPwd2 ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                ),
-              }}
+                type="email"
+                value={email}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>)=> {
+                  handleEmailChange(event);
+                  validateEmail(event.target.value);
+                }}
+                onBlur={() => validateEmail(email)}
+                label="Email"
+                fullWidth
+                error={!!emailError}
+                helperText={emailError}
             />
           </Box>
           <Box
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
+              style={{
+                width: "100%",
+                marginBottom: "20px",
+                position: "relative",
+              }}
           >
-            <Link to="/">
-              <Button sx={{height: "44.5px", color: "#ccc"}}>
+            <TextField
+                type={isRevealPwd1 ? "text" : "password"}
+                value={password}
+                onChange={handlePasswordChange}
+                onBlur={() => validatePassword(password)}
+                label="Password"
+                fullWidth
+                error={!!passwordError}
+                helperText={passwordError}
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                        {password.length > 0 && (
+                            <IconButton
+                                sx={eyeButtonStyle}
+                                onClick={() =>
+                                    setIsRevealPwd1((prevState) => !prevState)
+                                }
+                            >
+                              {isRevealPwd1 ? (
+                                  <VisibilityOffIcon/>
+                              ) : (
+                                  <VisibilityIcon/>
+                              )}
+                            </IconButton>
+                        )}
+                      </InputAdornment>
+                  ),
+                }}
+            />
+          </Box>
+          <Box
+              style={{
+                width: "100%",
+                marginBottom: "20px",
+                position: "relative",
+              }}
+          >
+            <TextField
+                type={isRevealPwd2 ? "text" : "password"}
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                onBlur={() => validateConfirmPassword(password, confirmPassword)}
+                label="Confirm password"
+                fullWidth
+                error={!!confirmPasswordError}
+                helperText={confirmPasswordError}
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                        {confirmPassword.length > 0 && (
+                            <IconButton
+                                sx={eyeButtonStyle}
+                                onClick={() =>
+                                    setIsRevealPwd2((prevState) => !prevState)
+                                }
+                            >
+                              {isRevealPwd2 ? (
+                                  <VisibilityOffIcon/>
+                              ) : (
+                                  <VisibilityIcon/>
+                              )}
+                            </IconButton>
+                        )}
+                      </InputAdornment>
+                  ),
+                }}
+            />
+          </Box>
+          </span>
+
+          <Box
+              style={{
+                display: "flex",
+                justifyContent: "end",
+              }}
+          >
+            <Button variant="outlined" sx={{height: "40px", width: '110px'}} onClick={() => navigate("/")}>
                 Cancel
-              </Button>
-            </Link>
+            </Button>
             <Button
-              variant="contained"
-              onClick={handleRegister}
-              disabled={loading}
-              sx={registerButtonStyle}
+                variant="contained"
+                onClick={handleRegister}
+                disabled={loading}
+                sx={registerButtonStyle}
             >
-              {loading ? "Register..." : "Register"}
+              Register
             </Button>
           </Box>
         </Paper>
@@ -268,18 +256,10 @@ const registerContainerStyle = {
 };
 
 const registerButtonStyle = {
-  textTransform: "unset",
-  height: "44.5px",
-  flex: "1",
-  margin: "0 0 0 10px",
-  backgroundColor: "#2E8B57",
-  color: "#fff",
-  border: "none",
+  marginLeft: "10px",
+  height: "40px",
   borderRadius: "5px",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#3CB371",
-  },
+  width:'110px'
 };
 
 const lineUpStyle = {

@@ -5,29 +5,28 @@ import {
     Divider,
     IconButton,
     Menu,
-    MenuItem,
+    MenuItem, Theme,
     Typography,
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-
 import { useUserProfile } from "../UserProfileProvider";
 import { useWebSocket } from "../WebSocketProvider";
 import { useNavigate } from "react-router-dom";
+import MaterialUISwitch from "./ThemeSwitcher";
 
-const UserMenu: React.FC = () => {
+interface UserMenuProps {
+    setShouldRefetchTheme:(val:boolean)=>void
+    shouldRefetchTheme:boolean
+    theme:Theme
+}
+
+const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchTheme,theme}) => {
     const { userProfile } = useUserProfile();
     const { logout } = useWebSocket();
-    const [darkMode, setDarkMode] = useState(true);
     const navigate = useNavigate();
-    const toggleTheme = () => {
-        setDarkMode((prevMode) => !prevMode);
-    };
 
     const handleProfileClick = () => {
         navigate("?type=profile");
@@ -51,7 +50,13 @@ const UserMenu: React.FC = () => {
 
     const userName = userProfile?.userName ?? "Unknown User";
     const userEmail = userProfile?.email ?? "unknown@example.com";
-
+    const toggleTheme=()=>{
+        const currTheme=localStorage.getItem("theme") ?? "dark"
+        if (!["dark", "light"].includes(currTheme)) return
+        currTheme==="dark"?
+            localStorage.setItem("theme","light"):localStorage.setItem("theme","dark")
+        setShouldRefetchTheme(!shouldRefetchTheme)
+    }
     return (
         <Box>
             {/* Buton pe care se face click pentru a deschide meniul */}
@@ -66,8 +71,6 @@ const UserMenu: React.FC = () => {
                 onClose={handleCloseMenu}
                 PaperProps={{
                     sx: {
-                        backgroundColor: "#1e1e1e",
-                        color: "#fff",
                         width: 350,
                         mt: 1
                     },
@@ -88,18 +91,18 @@ const UserMenu: React.FC = () => {
                         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                             {userName}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: "#ccc" }}>
+                        <Typography variant="body2">
                             {userEmail}
                         </Typography>
                     </Box>
                 </Box>
 
-                <Divider sx={{ borderColor: "#333" }} />
+                <Divider />
 
                 {/* Profile */}
                 <MenuItem
                     onClick={handleProfileClick}
-                    sx={{ display: "flex", gap: 1, color: "#fff" }}
+                    sx={{ display: "flex", gap: 1}}
                 >
                     <PersonIcon fontSize="small" />
                     <Typography variant="body1">Profile</Typography>
@@ -108,7 +111,7 @@ const UserMenu: React.FC = () => {
                 {/* Settings */}
                 <MenuItem
                     onClick={handleCloseMenu}
-                    sx={{ display: "flex", gap: 1, color: "#fff" }}
+                    sx={{ display: "flex", gap: 1 }}
                 >
                     <SettingsIcon fontSize="small" />
                     <Typography variant="body1">Settings</Typography>
@@ -116,33 +119,23 @@ const UserMenu: React.FC = () => {
 
                 {/* Theme (Dark) */}
                 <MenuItem
-                    onClick={() => {
-                        console.log("Theme clicked");
-                        handleCloseMenu();
-                    }}
+                    // onClick={() => {
+                    //     console.log("Theme clicked");
+                    //     handleCloseMenu();
+                    // }}
                     sx={{
                         display: "flex",
-                        gap: 1,
-                        color: "#fff",
                     }}
                 >
-                    {darkMode ? <DarkModeIcon onClick={toggleTheme} fontSize="small"/> : <LightModeIcon onClick={toggleTheme} fontSize="small"/>}
-                    <Typography variant="body1">Theme</Typography>
-
-                    <Box sx={{ ml: "auto", display: "flex", alignItems: "flex-end", gap: 0.5 }}>
-                        <Typography variant="body2" sx={{ color: "#aaa" }}>
-                            Dark
-                        </Typography>
-                        <ChevronRightIcon fontSize="small" sx={{ color: "#aaa" }} />
-                    </Box>
+                    <MaterialUISwitch checked={theme.palette.mode === "dark"} onChange={toggleTheme} theme={theme}/>
                 </MenuItem>
 
-                <Divider sx={{ borderColor: "#333" }} />
+                <Divider />
 
                 {/* Logout */}
                 <MenuItem
                     onClick={handleLogout}
-                    sx={{ display: "flex", gap: 1, color: "#fff" }}
+                    sx={{ display: "flex", gap: 1 }}
                 >
                     <LogoutIcon fontSize="small" />
                     <Typography variant="body1">Log out</Typography>

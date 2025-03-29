@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Typography,
   TextField,
@@ -8,6 +8,7 @@ import {
   Box,
   Paper,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 
 const ForgotPassword: React.FC = () => {
@@ -38,7 +39,7 @@ const ForgotPassword: React.FC = () => {
       }
 
       if (response.ok) {
-        navigate("/email-notification?typePage=ResetPassword");
+        navigate("/email-notification?type=reset-password");
       }
     } catch (error) {
       console.error("Error register:", error);
@@ -66,41 +67,41 @@ const ForgotPassword: React.FC = () => {
           <Box style={{ marginBottom: "20px" }}>
             <Typography
               style={{
-                fontSize: "15px",
+                fontSize: "16px",
                 display: "block",
                 textAlign: "left",
                 marginBottom: "12px",
                 width: "auto",
               }}
             >
-              Please enter your email to search for your account.
+              {!loading && "Please enter your email to search for your account."}
             </Typography>
-            <TextField
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              label="Enter your email"
-              fullWidth
-            />
+            {loading ? <Box sx={{height:"92px", paddingY:"12px"}}> <CircularProgress /></Box> :
+                <TextField
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                label="Enter your email"
+                fullWidth
+                />
+            }
           </Box>
           <Box
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "end",
             }}
           >
-            <Link to="/">
-              <Button sx={{ height: "44.5px", color: "#ccc"}}>
+              <Button variant="outlined" sx={{height:"40px", width:'125px'}} onClick={()=>navigate("/")}>
                 Cancel
               </Button>
-            </Link>
             <Button
               variant="contained"
               onClick={handleForgotPassword}
               disabled={loading}
               sx={resetPasswordButtonStyle}
             >
-              {loading ? "Reset Password..." : "Reset Password"}
+              Reset Password
             </Button>
           </Box>
         </Paper>
@@ -118,18 +119,10 @@ const forgotPasswordContainerStyle = {
 };
 
 const resetPasswordButtonStyle = {
-  textTransform: "unset",
-  flex: "1",
-  margin: "0 0 0 10px",
-  height: "44.5px",
-  backgroundColor: "#2E8B57",
-  color: "#fff",
-  border: "none",
+  marginLeft: "10px",
+  height: "40px",
   borderRadius: "5px",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#3CB371",
-  },
+  width:'125px'
 };
 
 const lineUpStyle = {
