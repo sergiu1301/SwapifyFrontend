@@ -9,6 +9,7 @@ import {
   Box,
   Paper,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -99,62 +100,67 @@ const Login: React.FC = () => {
               Log Into Swapify
             </Typography>
             <Divider sx={lineUpStyle} />
-            <Box
-              style={{
-                width: "100%",
-                marginBottom: "20px",
-              }}
-            >
-              <TextField
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                label="Enter your email"
-                fullWidth
-              />
-            </Box>
-            <Box
-              style={{
-                width: "100%",
-                marginBottom: "20px",
-              }}
-            >
-              <Box
-                style={{
-                  width: "100%",
-                  marginBottom: "20px",
-                  position: "relative",
-                }}
-              >
-                <TextField
-                  type={isRevealPwd ? "text" : "password"}
-                  value={password}
-                  onChange={handlePasswordChange}
-                  label="Enter your password"
-                  fullWidth
-                />
-                {password.length > 0 && (
-                  <IconButton
-                    sx={eyeButtonStyle}
-                    onClick={() => setIsRevealPwd((prevState) => !prevState)}
+            {loading ? <Box sx={{height:"152px", display: "flex", justifyContent: "center", alignItems: "center"}}> <CircularProgress /></Box> :
+            (
+              <span>
+                <Box
+                  style={{
+                    width: "100%",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <TextField
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    label="Enter your email"
+                    fullWidth
+                  />
+                </Box>
+                <Box
+                  style={{
+                    width: "100%",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <Box
+                    style={{
+                      width: "100%",
+                      marginBottom: "20px",
+                      position: "relative",
+                    }}
                   >
-                    {isRevealPwd ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                )}
-              </Box>
-            </Box>
-            <Box style={{ marginBottom: "10px" }}>
-              <Typography style={{ fontWeight: "initial" }} color="error">
-                {errorMessage}
-              </Typography>
-            </Box>
+                    <TextField
+                      type={isRevealPwd ? "text" : "password"}
+                      value={password}
+                      onChange={handlePasswordChange}
+                      label="Enter your password"
+                      fullWidth
+                    />
+                    {password.length > 0 && (
+                      <IconButton
+                        sx={eyeButtonStyle}
+                        onClick={() => setIsRevealPwd((prevState) => !prevState)}
+                      >
+                        {isRevealPwd ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    )}
+                  </Box>
+                </Box>
+                <Box style={{ marginBottom: "10px" }}>
+                  <Typography style={{ fontWeight: "initial" }} color="error">
+                    {errorMessage}
+                  </Typography>
+                </Box>
+              </span>
+            )}
             <Button
               variant="contained"
               onClick={handleLogin}
               disabled={loading}
               sx={loginButtonStyle}
             >
-              {loading ? "Logging in..." : "Log in"}
+              Log in
             </Button>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <Divider sx={{ flexGrow: 1 }} />
@@ -168,14 +174,20 @@ const Login: React.FC = () => {
                 <Button
                   color="primary"
                   variant="text"
+                  disabled={loading}
                   sx={forgotPasswordButtonStyle}
                 >
                   Forgot Password?
                 </Button>
               </Link>
               <Link to="/register" style={{ textDecoration: "none" }}>
-                <Button color="primary" variant="text" sx={signUpButtonStyle}>
-                  Sign up
+                <Button
+                    color="primary"
+                    disabled={loading}
+                    variant="text"
+                    sx={signUpButtonStyle}
+                >
+                  Sign up for Swapify
                 </Button>
               </Link>
             </Box>

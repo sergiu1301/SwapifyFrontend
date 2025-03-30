@@ -1,8 +1,20 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Box, Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography,} from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import {validateConfirmPassword, validateEmail, validatePassword} from "../lib/utils.ts";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -19,48 +31,6 @@ const Register: React.FC = () => {
   const clientId = import.meta.env.VITE_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
-  const validateEmail = (email: string): boolean => {
-    const re =
-      /^(?!.{255})(?![^@]{65})((([^<>()\[\]\\.,;:\s@""]+(\.[^<>()\[\]\\.,;:\s@""]+)*)|("".+"")))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(String(email))) {
-      setEmailError("Invalid email format");
-      return false;
-    }
-    setEmailError("");
-    return true;
-  };
-
-  const validatePassword = (password: string): boolean => {
-    const re =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$%^&£*\-_+=[\]{}|\\:',?\/`~""()<>;!]{10,32}$/;
-
-    if (!re.test(String(password))) {
-      setPasswordError(
-        "The password must contain uppercase, lowercase letters, special characters and numbers",
-      );
-      return false;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 10 characters long");
-      return false;
-    }
-    setPasswordError("");
-    return true;
-  };
-
-  const validateConfirmPassword = (
-    password: string,
-    confirmPassword: string,
-  ): boolean => {
-    if (password !== confirmPassword) {
-      setConfirmPasswordError("Passwords do not match");
-      return false;
-    }
-    setConfirmPasswordError("");
-    return true;
-  };
-
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -76,34 +46,44 @@ const Register: React.FC = () => {
   };
 
   const handleRegister = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${apiUrl}/connect/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          clientId: clientId,
-          clientSecret: clientSecret
-        }),
-      });
+    if(password === "" || email === "")
+    {
+      setEmailError("This field cannot be empty.");
+      setPasswordError("This field cannot be empty.");
+      setConfirmPasswordError("This field cannot be empty.");
+      return;
+    }
 
-      if (response.ok) {
-        navigate("/email-notification?type=confirm-email");
+    if(passwordError === "" && confirmPasswordError === "" && emailError === "") {
+      try {
+        setLoading(true);
+        const response = await fetch(`${apiUrl}/connect/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            clientId: clientId,
+            clientSecret: clientSecret
+          }),
+        });
+
+        if (response.ok) {
+          navigate("/email-notification?type=confirm-email");
+        }
+
+        if (!response.ok) {
+          throw new Error("Register failed");
+        }
+
+        console.log("Register successful");
+      } catch (error) {
+        console.error("Error register:", error);
+      } finally {
+        setLoading(false);
       }
-
-      if (!response.ok) {
-        throw new Error("Register failed");
-      }
-
-      console.log("Register successful");
-    } catch (error) {
-      console.error("Error register:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -124,6 +104,7 @@ const Register: React.FC = () => {
           </Typography>
           <Divider sx={lineUpStyle}/>
 
+          {loading ? <Box sx={{height:"228px", display: "flex", justifyContent: "center", alignItems: "center"}}> <CircularProgress /></Box> : (
           <span>
           <Box
               style={{
@@ -136,9 +117,8 @@ const Register: React.FC = () => {
                 value={email}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>)=> {
                   handleEmailChange(event);
-                  validateEmail(event.target.value);
+                  validateEmail({email: event.target.value, setEmailError});
                 }}
-                onBlur={() => validateEmail(email)}
                 label="Email"
                 fullWidth
                 error={!!emailError}
@@ -156,7 +136,7 @@ const Register: React.FC = () => {
                 type={isRevealPwd1 ? "text" : "password"}
                 value={password}
                 onChange={handlePasswordChange}
-                onBlur={() => validatePassword(password)}
+                onBlur={() => validatePassword({password, setPasswordError})}
                 label="Password"
                 fullWidth
                 error={!!passwordError}
@@ -194,7 +174,7 @@ const Register: React.FC = () => {
                 type={isRevealPwd2 ? "text" : "password"}
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
-                onBlur={() => validateConfirmPassword(password, confirmPassword)}
+                onBlur={() => validateConfirmPassword({password, confirmPassword, setConfirmPasswordError})}
                 label="Confirm password"
                 fullWidth
                 error={!!confirmPasswordError}
@@ -221,7 +201,7 @@ const Register: React.FC = () => {
                 }}
             />
           </Box>
-          </span>
+          </span>)}
 
           <Box
               style={{

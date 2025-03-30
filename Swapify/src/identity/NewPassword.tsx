@@ -8,11 +8,12 @@ import {
   Button,
   InputAdornment,
   Paper,
-  Grid,
+  Grid, CircularProgress,
 } from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
+import {validateConfirmPassword, validatePassword} from "../lib/utils.ts";
 
 const NewPassword: React.FC = () => {
   const [password, setPassword] = useState("");
@@ -27,37 +28,6 @@ const NewPassword: React.FC = () => {
   const clientId = import.meta.env.VITE_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
-  const validatePassword = (password: string): boolean => {
-    const re =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$%^&£*\-_+=[\]{}|\\:',?\/`~""()<>;!]{10,32}$/;
-
-    if (!re.test(String(password))) {
-      setPasswordError(
-        "The password must contain uppercase, lowercase letters, special characters and numbers",
-      );
-      return false;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 10 characters long");
-      return false;
-    }
-    setPasswordError("");
-    return true;
-  };
-
-  const validateConfirmPassword = (
-    password: string,
-    confirmPassword: string,
-  ): boolean => {
-    if (password !== confirmPassword) {
-      setConfirmPasswordError("Passwords do not match");
-      return false;
-    }
-    setConfirmPasswordError("");
-    return true;
-  };
-
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
@@ -69,7 +39,14 @@ const NewPassword: React.FC = () => {
   };
 
   const handleSetPassword = async () => {
-    if (passwordError === "" && confirmPasswordError === "") {
+    if (password === "" || confirmPassword === "")
+    {
+      setPasswordError("This field cannot be empty.");
+      setConfirmPasswordError("This field cannot be empty.");
+      return;
+    }
+
+    if(passwordError === "" && confirmPasswordError === "") {
       try {
         setLoading(true);
         const searchParams = new URLSearchParams(location.search);
@@ -81,14 +58,14 @@ const NewPassword: React.FC = () => {
         }
 
         const response = await fetch(
-          `${apiUrl}/api/v1/user/reset-password?userId=${urlUserId}&token=${encodeURIComponent(token)}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
+            `${apiUrl}/api/v1/user/reset-password?userId=${urlUserId}&token=${encodeURIComponent(token)}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({newPassword: password, clientId: clientId, clientSecret: clientSecret}),
             },
-            body: JSON.stringify({ newPassword: password, clientId: clientId, clientSecret: clientSecret }),
-          },
         );
 
         if (!response.ok) {
@@ -123,84 +100,87 @@ const NewPassword: React.FC = () => {
               Reset password
             </Typography>
             <Divider sx={lineUpStyle} />
-            <Box
-              style={{
-                width: "100%",
-                marginBottom: "20px",
-                position: "relative",
-              }}
-            >
-              <TextField
-                type={isRevealPwd1 ? "text" : "password"}
-                value={password}
-                onChange={handlePasswordChange}
-                onBlur={() => validatePassword(password)}
-                label="New password"
-                fullWidth
-                error={!!passwordError}
-                helperText={passwordError}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {password.length > 0 && (
-                        <IconButton
-                          sx={eyeButtonStyle}
-                          onClick={() =>
-                            setIsRevealPwd1((prevState) => !prevState)
-                          }
-                        >
-                          {isRevealPwd1 ? (
-                            <VisibilityOffIcon />
-                          ) : (
-                            <VisibilityIcon />
-                          )}
-                        </IconButton>
-                      )}
-                    </InputAdornment>
-                  ),
+            {loading ? <Box sx={{height:"152px", display: "flex", justifyContent: "center", alignItems: "center"}}> <CircularProgress /></Box> :
+                (<span>
+              <Box
+                style={{
+                  width: "100%",
+                  marginBottom: "20px",
+                  position: "relative",
                 }}
-              />
-            </Box>
-            <Box
-              style={{
-                width: "100%",
-                marginBottom: "20px",
-                position: "relative",
-              }}
-            >
-              <TextField
-                type={isRevealPwd2 ? "text" : "password"}
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                onBlur={() =>
-                  validateConfirmPassword(password, confirmPassword)
-                }
-                label="Confirm new password"
-                fullWidth
-                error={!!confirmPasswordError}
-                helperText={confirmPasswordError}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {confirmPassword.length > 0 && (
-                        <IconButton
-                          sx={eyeButtonStyle}
-                          onClick={() =>
-                            setIsRevealPwd2((prevState) => !prevState)
-                          }
-                        >
-                          {isRevealPwd2 ? (
-                            <VisibilityOffIcon />
-                          ) : (
-                            <VisibilityIcon />
-                          )}
-                        </IconButton>
-                      )}
-                    </InputAdornment>
-                  ),
+              >
+                <TextField
+                  type={isRevealPwd1 ? "text" : "password"}
+                  value={password}
+                  onChange={handlePasswordChange}
+                  onBlur={() => validatePassword({password, setPasswordError})}
+                  label="New password"
+                  fullWidth
+                  error={!!passwordError}
+                  helperText={passwordError}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {password.length > 0 && (
+                          <IconButton
+                            sx={eyeButtonStyle}
+                            onClick={() =>
+                              setIsRevealPwd1((prevState) => !prevState)
+                            }
+                          >
+                            {isRevealPwd1 ? (
+                              <VisibilityOffIcon />
+                            ) : (
+                              <VisibilityIcon />
+                            )}
+                          </IconButton>
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+              <Box
+                style={{
+                  width: "100%",
+                  marginBottom: "20px",
+                  position: "relative",
                 }}
-              />
-            </Box>
+              >
+                <TextField
+                  type={isRevealPwd2 ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  onBlur={() =>
+                    validateConfirmPassword({password, confirmPassword, setConfirmPasswordError})
+                  }
+                  label="Confirm new password"
+                  fullWidth
+                  error={!!confirmPasswordError}
+                  helperText={confirmPasswordError}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {confirmPassword.length > 0 && (
+                          <IconButton
+                            sx={eyeButtonStyle}
+                            onClick={() =>
+                              setIsRevealPwd2((prevState) => !prevState)
+                            }
+                          >
+                            {isRevealPwd2 ? (
+                              <VisibilityOffIcon />
+                            ) : (
+                              <VisibilityIcon />
+                            )}
+                          </IconButton>
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+            </span>)}
             <Button
               variant="contained"
               onClick={handleSetPassword}

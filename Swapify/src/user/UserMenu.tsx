@@ -111,6 +111,7 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
                 {/* Settings */}
                 <MenuItem
                     onClick={handleCloseMenu}
+                    disabled={true}
                     sx={{ display: "flex", gap: 1 }}
                 >
                     <SettingsIcon fontSize="small" />

@@ -10,11 +10,13 @@ import {
   Grid,
   CircularProgress,
 } from "@mui/material";
+import {validateEmail} from "../lib/utils.ts";
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const apiUrl = import.meta.env.VITE_API_URL;
   const clientId = import.meta.env.VITE_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
@@ -24,27 +26,35 @@ const ForgotPassword: React.FC = () => {
   };
 
   const handleForgotPassword = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${apiUrl}/api/v1/user/forgot-password`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, clientId: clientId, clientSecret: clientSecret }),
-      });
+    if(email === "")
+    {
+      setEmailError("This field cannot be empty");
+      return;
+    }
 
-      if (!response.ok) {
-        throw new Error("Register failed");
-      }
+    if(emailError === "") {
+      try {
+        setLoading(true);
+        const response = await fetch(`${apiUrl}/api/v1/user/forgot-password`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({email: email, clientId: clientId, clientSecret: clientSecret}),
+        });
 
-      if (response.ok) {
-        navigate("/email-notification?type=reset-password");
+        if (!response.ok) {
+          throw new Error("Register failed");
+        }
+
+        if (response.ok) {
+          navigate("/email-notification?type=reset-password");
+        }
+      } catch (error) {
+        console.error("Error register:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error register:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -80,9 +90,14 @@ const ForgotPassword: React.FC = () => {
                 <TextField
                 type="email"
                 value={email}
-                onChange={handleEmailChange}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>)=> {
+                  handleEmailChange(event);
+                  validateEmail({email: event.target.value, setEmailError});
+                }}
                 label="Enter your email"
                 fullWidth
+                error={!!emailError}
+                helperText={emailError}
                 />
             }
           </Box>
