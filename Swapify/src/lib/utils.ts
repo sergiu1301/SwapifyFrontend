@@ -1,3 +1,5 @@
+import {NavigateFunction} from "react-router-dom";
+
 interface ValidateEmailProps {
     email: string;
     setEmailError: (error: string) => void;
@@ -53,4 +55,9 @@ export const validateConfirmPassword = (
     }
     setConfirmPasswordError("");
     return true;
+};
+
+export const logout = (navigate: NavigateFunction) => {
+    localStorage.removeItem("jwtToken");
+    navigate("/");
 };

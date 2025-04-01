@@ -18,3 +18,36 @@ body {
   min-width: 0;
   max-width: 100%;
 }
+
+.shiny-logo {
+  position: relative;
+  display: inline-block;
+  border-radius: 70%;
+  overflow: hidden;
+}
+
+.shiny-logo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  animation: shine 2.5s infinite;
+  border-radius: 70%;
+}
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
+  }
+}

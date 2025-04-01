@@ -10,7 +10,6 @@ interface UserProfile {
   email: string;
   emailConfirmed: boolean;
   roleDescription: string;
-  // Adaugă alte proprietăți necesare profilului utilizatorului
 }
 
 interface UserProfileContextType {

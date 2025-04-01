@@ -99,7 +99,7 @@ const ProfilePage: React.FC = () => {
                     <Paper
                         sx={{
                             p: 2,
-                            borderRadius: 1,
+                            borderRadius: 1
                         }}
                         elevation={3}
                     >

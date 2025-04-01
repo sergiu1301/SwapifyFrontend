@@ -6,7 +6,6 @@ import {
     IconButton,
     InputAdornment,
     MenuItem,
-    Paper,
     Select, SelectChangeEvent,
     Table,
     TableBody,
@@ -82,7 +81,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                }) => {
 const theme=useGetTheme();
     return (
-        <Paper elevation={10} sx={{ padding: "16px", flex: 1 }}>
+        <Box sx={{ padding: "16px", flex: 1 }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                 <Typography variant="h5">Individuals</Typography>
                 <Button
@@ -127,14 +126,14 @@ const theme=useGetTheme();
                         },
                         scrollbarWidth: "thin",
                     }}>
-                        <Table stickyHeader>
+                        <Table stickyHeader >
                             <TableHead>
                                 <TableRow>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Member</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Status</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Role</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Phone</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">
+                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Member</TableCell>
+                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Status</TableCell>
+                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Role</TableCell>
+                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Phone</TableCell>
+                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}} align="right">
                                         Actions
                                     </TableCell>
                                 </TableRow>
@@ -280,7 +279,7 @@ const theme=useGetTheme();
                     </Box>
                 </>
             )}
-        </Paper>
+        </Box>
     );
 };
 

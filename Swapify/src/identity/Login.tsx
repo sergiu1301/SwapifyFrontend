@@ -76,7 +76,7 @@ const Login: React.FC = () => {
       if (profile.roleName === "admin") {
         navigate("/admin/manage?type=individuals");
       } else if (profile.roleName === "user") {
-        navigate("/user/manage_rooms");
+        navigate("/home");
       }
     } catch (error) {
       console.error("Error logging in:", error);

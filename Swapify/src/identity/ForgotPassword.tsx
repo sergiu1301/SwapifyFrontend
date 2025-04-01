@@ -107,7 +107,7 @@ const ForgotPassword: React.FC = () => {
               justifyContent: "end",
             }}
           >
-              <Button variant="outlined" sx={{height:"40px", width:'125px'}} onClick={()=>navigate("/")}>
+              <Button variant="outlined" sx={{height:"40px", width:'125px'}} onClick={()=>navigate("/login")}>
                 Cancel
               </Button>
             <Button

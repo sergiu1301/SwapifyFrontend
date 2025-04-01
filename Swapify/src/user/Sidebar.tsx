@@ -3,8 +3,8 @@ import { Button, Grid, Typography } from "@mui/material";
 import {useGetTheme} from "../hooks/useGetTheme.ts";
 
 interface SidebarProps {
-    context: "individuals" | "roles";
-    handleButtonClick: (context: "individuals" | "roles") => void;
+    context: "home" | "my-items";
+    handleButtonClick: (context: "home" | "my-items") => void;
 }
 
 const sidebarButtonActive = {
@@ -23,7 +23,6 @@ const sidebarButtonInactive = {
 };
 const Sidebar: React.FC<SidebarProps> = ({ context, handleButtonClick }) => {
     const theme=useGetTheme()
-    // const isSidebarOpen=useStore((state) => state.isSidebarOpen);
 
     return (
         <Grid
@@ -39,23 +38,22 @@ const Sidebar: React.FC<SidebarProps> = ({ context, handleButtonClick }) => {
                 padding: "16px",
             }}
         >
-            <Typography variant="h6" sx={{ marginBottom: 2 }}>
-                Manage
+            <Typography variant="h6" sx={{ marginBottom: 1, marginTop: 1 }}>
+                Context
             </Typography>
             <Button
-                onClick={() => handleButtonClick("individuals")}
-                sx={context === "individuals" ? sidebarButtonActive : sidebarButtonInactive}
-                style={{color:theme==="light" && context !== "individuals" ?  "#2b2b2b" : "#fefdfb"}}
+                onClick={() => handleButtonClick("home")}
+                sx={context === "home" ? sidebarButtonActive : sidebarButtonInactive}
+                style={{color:theme==="light" && context !== "home" ?  "#2b2b2b" : "#fefdfb"}}
             >
-                Individuals
+                Home
             </Button>
-
             <Button
-                onClick={() => handleButtonClick("roles")}
-                sx={context === "roles" ? sidebarButtonActive : sidebarButtonInactive}
-                style={{color:theme==="light" && context !== "roles" ?  "#2b2b2b" : "#fefdfb"}}
+                onClick={() => handleButtonClick("my-items")}
+                sx={context === "my-items" ? sidebarButtonActive : sidebarButtonInactive}
+                style={{color:theme==="light" && context !== "my-items" ?  "#2b2b2b" : "#fefdfb"}}
             >
-                Roles
+                My Items
             </Button>
         </Grid>
     );

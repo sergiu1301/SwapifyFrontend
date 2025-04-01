@@ -3,7 +3,6 @@ import {
     Box,
     Button,
     IconButton,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -43,78 +42,85 @@ const RolesTable: React.FC<RolesTableProps> = ({
 const theme=useGetTheme();
     return (
         // <Paper elevation={10} sx={{ backgroundColor: "#2a2a2a", padding: "16px", flex: 1 }}>
-        <Paper elevation={10} sx={{ padding: "16px", flex: 1 }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-                        <Typography variant="h5">Roles</Typography>
-                        <Button
-                            variant="contained"
-                            sx={{ textTransform: "unset" }}
-                            onClick={onAddNewRole}
-                        >
-                            Add new role
-                        </Button>
-                    </Box>
+        <Box sx={{ padding: "16px", flex: 1 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                <Typography variant="h5">Roles</Typography>
+                <Button
+                    variant="contained"
+                    sx={{ textTransform: "unset" }}
+                    onClick={onAddNewRole}
+                >
+                    Add new role
+                </Button>
+            </Box>
 
-                    {isLoading ? (
-                        <ShimmerRolesTableLoader rows={2} />
-                    ) : isError ? (
+            {isLoading ? (
+                <ShimmerRolesTableLoader rows={2} />
+            ) : isError ? (
 
-                        <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
-                            <Typography variant="h6" color="error">
-                                Error fetching data
-                            </Typography>
-                        </Box>
-                    ) : (<TableContainer sx={{overflow: "auto",
-                        maxHeight: {
-                            xs: "auto",
-                            md: "calc(100vh - 280px)",
-                        },
-                        scrollbarWidth: "thin",
-                    }}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Id</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Name</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Description</TableCell>
-                                    <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">Actions</TableCell>
-                                </TableRow>
-                                <TableRow sx={{ visibility: "collapse" }}>
-                                    <TableCell>c50d8d05-ef5b-40fb-8ea2-45d3bfe67cf0</TableCell>
-                                    <TableCell>exampleOfRoleName</TableCell>
-                                    <TableCell>exampleOfRoleDescription</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton><EditIcon /></IconButton>
-                                        <IconButton><DeleteIcon /></IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {roles.map((role) => (
-                                    <TableRow key={role.roleId}>
-                                        <TableCell>{role.roleId}</TableCell>
-                                        <TableCell>{role.name}</TableCell>
-                                        <TableCell>{role.description}</TableCell>
-                                        <TableCell align="right">
-                                            <IconButton
-                                                onClick={() => onEditRole(role.roleId, role.name, role.description)}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton
-                                                onClick={() => onRemoveRole(role.name)}
-                                                disabled={role.name === "admin" || role.name === "user"}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    )}
-        </Paper>
+                <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
+                    <Typography variant="h6" color="error">
+                        Error fetching data
+                    </Typography>
+                </Box>
+            ) : (<TableContainer sx={{overflow: "auto",
+                maxHeight: {
+                    xs: "auto",
+                    md: "calc(100vh - 280px)",
+                },
+                scrollbarWidth: "thin",
+            }}>
+                <Table stickyHeader>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Id</TableCell>
+                            <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Name</TableCell>
+                            <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Description</TableCell>
+                            <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}} align="right">Actions</TableCell>
+                        </TableRow>
+                        <TableRow sx={{ visibility: "collapse" }}>
+                            <TableCell>c50d8d05-ef5b-40fb-8ea2-45d3bfe67cf0</TableCell>
+                            <TableCell>exampleOfRoleName</TableCell>
+                            <TableCell>exampleOfRoleDescription</TableCell>
+                            <TableCell align="right">
+                                <IconButton><EditIcon /></IconButton>
+                                <IconButton><DeleteIcon /></IconButton>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {roles.map((role) => (
+                            <TableRow key={role.roleId} sx={{
+                                backgroundColor: "transparent",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
+                                "&:hover": {
+                                    backgroundColor: theme==="dark" ? "#3b3b3b" : "#f9f0d8",
+                                },
+                            }}>
+                                <TableCell>{role.roleId}</TableCell>
+                                <TableCell>{role.name}</TableCell>
+                                <TableCell>{role.description}</TableCell>
+                                <TableCell align="right">
+                                    <IconButton
+                                        onClick={() => onEditRole(role.roleId, role.name, role.description)}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        onClick={() => onRemoveRole(role.name)}
+                                        disabled={role.name === "admin" || role.name === "user"}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            )}
+        </Box>
     );
 };
 

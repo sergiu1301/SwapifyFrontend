@@ -69,6 +69,21 @@ export const lightThemeOptions: ThemeOptions = {
                     color: lightText,
                 }
             }
+        },
+
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#fff",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    transition: "box-shadow 0.3s ease",
+                    "&:hover": {
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    },
+                },
+            },
         }
     },
 };
@@ -116,5 +131,21 @@ export const darkThemeOptions: ThemeOptions = {
                 },
             },
         },
+
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#262626",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                    transition: "box-shadow 0.3s ease",
+                    "&:hover": {
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+                    },
+                },
+            },
+        }
+
     },
 };

@@ -209,7 +209,7 @@ const Register: React.FC = () => {
                 justifyContent: "end",
               }}
           >
-            <Button variant="outlined" sx={{height: "40px", width: '110px'}} onClick={() => navigate("/")}>
+            <Button variant="outlined" sx={{height: "40px", width: '110px'}} onClick={() => navigate("/login")}>
                 Cancel
             </Button>
             <Button

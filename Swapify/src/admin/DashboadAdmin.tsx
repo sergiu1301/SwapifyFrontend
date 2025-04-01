@@ -181,7 +181,7 @@ const DashboardAdmin:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,sho
             <Typography>
                 {parts.map((part, index) =>
                         part.toLowerCase() === query.toLowerCase() ? (
-                            <span key={index} style={{ backgroundColor: "#f4e3b6" }}>
+                            <span key={index} style={{ backgroundColor: theme.palette.mode === "dark" ? "#e3b43e" : "#f4e3b6" }}>
               {part}
             </span>
                         ) : (
@@ -271,6 +271,7 @@ const DashboardAdmin:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,sho
     const currentType = searchParams.get("type");
     return (
         <Box sx={{ width: "100vw", height: "100vh", color: "#fff", display: "flex", flexDirection: "column" }}>
+            <Topbar setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/>
             <Grid container sx={{ flex: 1, overflow: {xs: "auto", md: "hidden", "&::-webkit-scrollbar": {
                         width: "8px",
                         height: "8px",
@@ -283,7 +284,6 @@ const DashboardAdmin:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,sho
                 <Sidebar context={context} handleButtonClick={handleButtonClick} />
 
                 <Grid item xs={12} md={10} sx={{ display: "flex", flexDirection: "column", overflow: "auto" }}>
-                    <Topbar setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/>
 
                     {currentType === "profile" && (
                         <ProfilePage />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import envelopeImg from "../assets/envelope.svg";
 
 const EmailNotification: React.FC = () => {
@@ -24,7 +24,7 @@ const EmailNotification: React.FC = () => {
 
     fetchData();
   }, []);
-
+  const navigate = useNavigate();
   if (typePage == "confirm-email" || typePage == "reset-password") {
     return (
       <Grid container spacing={2}>
@@ -64,13 +64,9 @@ const EmailNotification: React.FC = () => {
                   "A reset password email has been successfully sent to your address. Please take a moment to check your inbox, as well as any spam or junk folders, to ensure you have received it."}
               </Typography>
             </Box>
-            <Box>
-              <Link to="/" style={{ textDecoration: "none" }}>
-                <Button variant="text">
+                <Button variant="text" onClick={()=>{navigate("/")}}>
                   Back to login page
                 </Button>
-              </Link>
-            </Box>
           </Paper>
         </Grid>
       </Grid>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import checkImg from "../assets/new-checked.svg";
-import { Box, Button, Grid, Divider, Typography, Paper } from "@mui/material";
-import { Link } from "react-router-dom";
+import {  Button, Grid, Divider, Typography, Paper } from "@mui/material";
+import { useNavigate} from "react-router-dom";
 
 const SuccessNotification: React.FC = () => {
   const [typePage, setTypePage] = useState("");
@@ -24,7 +24,7 @@ const SuccessNotification: React.FC = () => {
 
     fetchData();
   }, []);
-
+const navigate = useNavigate();
   return (
     <Grid container spacing={2}>
       <Grid item sx={boxSection}>
@@ -58,13 +58,9 @@ const SuccessNotification: React.FC = () => {
             alt="Not confirmed email"
             style={{ width: "20%", height: "auto" }}
           />
-          <Box>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Button variant="text" sx={loginButtonStyle}>
+              <Button variant="text" sx={loginButtonStyle} onClick={()=>{navigate("/")}}>
                 Back to login page
               </Button>
-            </Link>
-          </Box>
         </Paper>
       </Grid>
     </Grid>

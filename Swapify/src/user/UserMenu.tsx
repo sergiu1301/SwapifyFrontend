@@ -13,9 +13,9 @@ import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useUserProfile } from "../UserProfileProvider";
-import { useWebSocket } from "../WebSocketProvider";
 import { useNavigate } from "react-router-dom";
 import MaterialUISwitch from "./ThemeSwitcher";
+import {logout} from "../lib/utils.ts";
 
 interface UserMenuProps {
     setShouldRefetchTheme:(val:boolean)=>void
@@ -25,7 +25,6 @@ interface UserMenuProps {
 
 const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchTheme,theme}) => {
     const { userProfile } = useUserProfile();
-    const { logout } = useWebSocket();
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
@@ -44,7 +43,7 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
     };
 
     const handleLogout = () => {
-        logout();
+        logout(navigate);
         handleCloseMenu();
     };
 
@@ -86,7 +85,7 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
             >
                 {/* Header cu Avatar + Nume + Email */}
                 <Box sx={{ display: "flex", flexDirection: "row", p: 2 }}>
-                    <Avatar alt={userProfile?.userName} sx={{ width: 40, height: 40, mr: 2 }} src="/avatar.jpg" />
+                    <Avatar alt={userProfile?.userName} sx={{ width: 40, height: 40, mr: 1.5, mt: 0.5}} src="/avatar.jpg" />
                     <Box>
                         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                             {userName}
