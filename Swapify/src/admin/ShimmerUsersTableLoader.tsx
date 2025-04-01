@@ -26,11 +26,11 @@ const ShimmerUsersTableLoader = ({ rows = 6 }: { rows?: number }) => {
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Member</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Status</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Role</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Phone</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">Actions</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Member</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Status</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Role</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Phone</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}} align="right">Actions</TableCell>
                     </TableRow>
                     <TableRow sx={{ visibility: "collapse" }}>
                         <TableCell>averyaddress@exampledomain.com</TableCell>

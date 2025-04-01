@@ -25,10 +25,10 @@ const ShimmerRolesTableLoader = ({ rows = 2 }: { rows?: number }) => {
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Id</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Name</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}}>Description</TableCell>
-                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : ""}} align="right">Actions</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Id</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Name</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Description</TableCell>
+                        <TableCell style={{backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}} align="right">Actions</TableCell>
                     </TableRow>
                     <TableRow sx={{ visibility: "collapse" }}>
                         <TableCell>c50d8d05-ef5b-40fb-8ea2-45d3bfe67cf0</TableCell>

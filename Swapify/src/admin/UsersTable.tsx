@@ -81,7 +81,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                }) => {
 const theme=useGetTheme();
     return (
-        <Box sx={{ padding: "16px", flex: 1 }}>
+        <Box sx={{ padding: "16px", flex: 1, transition: "margin-right 0.5s ease" }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                 <Typography variant="h5">Individuals</Typography>
                 <Button

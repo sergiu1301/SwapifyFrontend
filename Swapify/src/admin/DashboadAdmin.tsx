@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Grid, SelectChangeEvent, Theme, Typography} from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUserProfile } from "../UserProfileProvider";
@@ -12,6 +12,7 @@ import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import RoleDialog from "./RoleDialog";
 import { useQueryClient } from "react-query";
 import ProfilePage from "../user/ProfilePage.tsx";
+import { useStore } from "../store";
 
 interface DashboardAdminProps {
     setShouldRefetchTheme:(val:boolean)=>void
@@ -24,6 +25,7 @@ const DashboardAdmin:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,sho
     const [searchParams] = useSearchParams();
     const { userProfile } = useUserProfile();
     const queryClient = useQueryClient();
+    const isSidebarOpen = useStore((state) => state.isSidebarOpen);
 
     const initialContext =
         searchParams.get("type") === "roles"
@@ -281,9 +283,16 @@ const DashboardAdmin:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,sho
                     },
                     scrollbarWidth: "thin",
                     scrollbarColor:  theme.palette.mode === "dark" ? "#555 #2a2a2a" : ""} }}>
-                <Sidebar context={context} handleButtonClick={handleButtonClick} />
 
-                <Grid item xs={12} md={10} sx={{ display: "flex", flexDirection: "column", overflow: "auto" }}>
+                <Grid item sx={{ display: "flex", flexDirection: "column", width: isSidebarOpen ? "clamp(180px, 16vw, 250px)" : "clamp(64px, 8vw, 80px)",
+                    transition: "width 0.5s cubic-bezier(1, 1, 1, 1)",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",}}>
+                    <Sidebar context={context} handleButtonClick={handleButtonClick} />
+                </Grid>
+
+                <Grid item sx={{ flexGrow: 1, display: "flex", flexDirection: "column", overflow: "auto", transition: "width 0.5s cubic-bezier(1, 1, 1, 1)", willChange: "width, flex-grow",
+                    minWidth: 0}}>
 
                     {currentType === "profile" && (
                         <ProfilePage />
