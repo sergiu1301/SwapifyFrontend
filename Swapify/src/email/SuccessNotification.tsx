@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import checkImg from "../assets/new-checked.svg";
-import {  Button, Grid, Divider, Typography, Paper } from "@mui/material";
+import {  Button, Grid, Divider, Typography, Paper, Box } from "@mui/material";
 import { useNavigate} from "react-router-dom";
 
 const SuccessNotification: React.FC = () => {
@@ -26,7 +26,7 @@ const SuccessNotification: React.FC = () => {
   }, []);
 const navigate = useNavigate();
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{width: "400px", height: "230px"}}>
       <Grid item sx={boxSection}>
         <Paper
           sx={{ ...paperSection, ...emailConfirmedContainerStyle }}
@@ -53,14 +53,16 @@ const navigate = useNavigate();
             </Typography>
           )}
           <Divider sx={lineUpStyle} />
-          <img
-            src={checkImg}
-            alt="Not confirmed email"
-            style={{ width: "20%", height: "auto" }}
-          />
-              <Button variant="text" sx={loginButtonStyle} onClick={()=>{navigate("/")}}>
-                Back to login page
-              </Button>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <img
+              src={checkImg}
+              alt="Not confirmed email"
+              style={{ width: "72px", height: "72px", }}
+            />
+            <Button variant="text" sx={loginButtonStyle} onClick={()=>{navigate("/")}}>
+              Back to login page
+            </Button>
+          </Box>
         </Paper>
       </Grid>
     </Grid>

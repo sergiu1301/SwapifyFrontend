@@ -9,7 +9,7 @@ import EmailNotification from "./email/EmailNotification.tsx";
 import ConfirmEmail from "./email/ConfirmEmail.tsx";
 import NewPassword from "./identity/NewPassword.tsx";
 import LandingPage from "./identity/LandingPage.tsx";
-import DashboardAdmin from "./admin/DashboadAdmin.tsx";
+import Dashboard from "./admin/Dashboard.tsx";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -20,8 +20,12 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {lightThemeOptions, darkThemeOptions} from "../styling.ts";
-import DashboardUser from "./user/DashboardUser.tsx";
 import ItemDetails from "./user/ItemDetails.tsx";
+import AvailableItemsSection from "./user/AvailableItemsSection.tsx";
+import MyItemsSection from "./user/MyItemsSection.tsx";
+import IndividualsSection from "./admin/IndividualsSection.tsx";
+import RolesSection from "./admin/RolesSection.tsx";
+import ProfilePage from "./user/ProfilePage.tsx";
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
@@ -38,32 +42,30 @@ const App: React.FC = () => {
         <Router>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
+                <QueryClientProvider client={queryClient}>
                 <UserProfileProvider>
                     <Routes>
                         <Route path="/" element={<LandingPage />} />
                         <Route
                             path="/login"
                             element={
-                                <QueryClientProvider client={queryClient}>
                                     <Login />
-                                </QueryClientProvider>
                             }
                         />
                         <Route path="/register" element={<Register />} />
                         <Route path="/forgot-password" element={<ForgotPassword />} />
                         <Route
-                            path="/admin/manage"
                             element={
-                                <QueryClientProvider client={queryClient}>
-                                    <DashboardAdmin setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/>
-                                </QueryClientProvider>
+                                    <Dashboard setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/>
                             }
-                        />
-                        <Route path="/user/items/:id" element={<ItemDetails />} />
-                        <Route
-                            path="/home"
-                            element={ <DashboardUser setShouldRefetchTheme={setShouldRefetchTheme} shouldRefetchTheme={shouldRefetchTheme} theme={theme}/> }
-                        />
+                        >
+                            <Route path="/profile" element={<ProfilePage />} />
+                            <Route path="/roles" element={<RolesSection />} />
+                            <Route path="/individuals" element={<IndividualsSection />} />
+                            <Route path="/home" element={<AvailableItemsSection theme={theme}/>} />
+                            <Route path="/my-inventory" element={<MyItemsSection />} />
+                            <Route path="/items/:id" element={<ItemDetails />} />
+                        </Route>
                         <Route
                             path="/success-notification"
                             element={<SuccessNotification />}
@@ -81,6 +83,7 @@ const App: React.FC = () => {
                         <Route path="*" element={<PageNotFound />} />
                     </Routes>
                 </UserProfileProvider>
+                </QueryClientProvider>
             </ThemeProvider>
         </Router>
     );

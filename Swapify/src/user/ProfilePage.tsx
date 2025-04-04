@@ -93,7 +93,7 @@ const ProfilePage: React.FC = () => {
             </Box>
             <Divider/>
             {/* Conținutul fiecărui tab */}
-            <Box sx={{ flex: 1, display: "flex", flexDirection: "column", maxHeight: "100vh" }}>
+            <Box sx={{ flex: 1, display: "flex", flexDirection: "column", maxHeight: "100vh"}}>
                 {/* TAB 0: DETAILS */}
                 <TabPanel value={tabValue} index={0}>
                     <Paper

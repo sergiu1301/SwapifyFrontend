@@ -10,10 +10,12 @@ import {
   Paper,
   Grid,
   CircularProgress,
+  useTheme
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useUserProfile } from "../UserProfileProvider.tsx";
+import { useUserProfile } from "../UserProfileProvider";
+import { useQueryClient } from "react-query";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -22,10 +24,12 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isRevealPwd, setIsRevealPwd] = useState<boolean>(false);
-  const { setUserProfile } = useUserProfile();
+  const theme = useTheme();
   const apiUrl = import.meta.env.VITE_API_URL;
   const clientId = import.meta.env.VITE_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
+  const { refetch: refetchUserProfile } = useUserProfile();
+  const queryClient = useQueryClient();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -60,24 +64,13 @@ const Login: React.FC = () => {
       const tokenData = await response.json();
       localStorage.setItem("jwtToken", tokenData.access_token);
 
-      const responseProfile = await fetch(`${apiUrl}/api/v1/user`, {
-        headers: { Authorization: `Bearer ${tokenData.access_token}` },
-      });
+      queryClient.removeQueries({ queryKey: ["userProfile"] });
 
-      if (!responseProfile.ok) {
-        throw new Error("Failed to fetch user profile");
-      }
+      await refetchUserProfile();
 
-      const profile = await responseProfile.json();
-      console.log(profile);
-      setUserProfile(profile);
       setErrorMessage("");
 
-      if (profile.roleName === "admin") {
-        navigate("/admin/manage?type=individuals");
-      } else if (profile.roleName === "user") {
-        navigate("/home");
-      }
+      navigate("/home");
     } catch (error) {
       console.error("Error logging in:", error);
       setErrorMessage("Oops, something's wrong. Please come back later.");
@@ -91,6 +84,37 @@ const Login: React.FC = () => {
       <Grid item sx={boxSection}>
         <Paper sx={{ ...paperSection, ...loginContainerStyle }} elevation={10}>
           <Box>
+            {/* 🎨 Background BLOBs - decorative, fixed */}
+            <Box
+                sx={{
+                  position: "fixed",
+                  top: "-100px",
+                  left: "-150px",
+                  width: "400px",
+                  height: "400px",
+                  backgroundColor: "#e3b43e",
+                  opacity: 0.1,
+                  filter: "blur(130px)",
+                  borderRadius: "50%",
+                  zIndex: 0,
+                  pointerEvents: "none",
+                }}
+            />
+            <Box
+                sx={{
+                  position: "fixed",
+                  bottom: "-100px",
+                  right: "-150px",
+                  width: "500px",
+                  height: "500px",
+                  backgroundColor: theme.palette.mode === "dark" ? "#ffffff22" : "#00000011",
+                  opacity: 0.1,
+                  filter: "blur(160px)",
+                  borderRadius: "50%",
+                  zIndex: 0,
+                  pointerEvents: "none",
+                }}
+            />
             <Typography
               style={{
                 fontSize: "23px",
@@ -102,7 +126,7 @@ const Login: React.FC = () => {
             <Divider sx={lineUpStyle} />
             {loading ? <Box sx={{height:"152px", display: "flex", justifyContent: "center", alignItems: "center"}}> <CircularProgress /></Box> :
             (
-              <span>
+              <>
                 <Box
                   style={{
                     width: "100%",
@@ -152,7 +176,7 @@ const Login: React.FC = () => {
                     {errorMessage}
                   </Typography>
                 </Box>
-              </span>
+              </>
             )}
             <Button
               variant="contained"
@@ -169,7 +193,7 @@ const Login: React.FC = () => {
               </Typography>
               <Divider sx={{ flexGrow: 1 }} />
             </Box>
-            <Box style={{ marginTop: "4px" }}>
+            <Box style={{ marginTop: "6px" }}>
               <Link to="/forgot-password" style={{ textDecoration: "none" }}>
                 <Button
                   color="primary"

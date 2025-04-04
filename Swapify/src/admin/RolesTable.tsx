@@ -41,8 +41,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
 
 const theme=useGetTheme();
     return (
-        // <Paper elevation={10} sx={{ backgroundColor: "#2a2a2a", padding: "16px", flex: 1 }}>
-        <Box sx={{ padding: "16px", flex: 1 }}>
+        <Box sx={{ padding: "16px", flex: 1}}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                 <Typography variant="h5">Roles</Typography>
                 <Button

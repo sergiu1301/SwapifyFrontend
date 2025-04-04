@@ -29,7 +29,7 @@ const isSideBarOpen = useStore((state) => state.isSidebarOpen);
                     {/* LOGO */}
                     <Box sx={{ display: "flex", alignItems: "center", }}>
                         <img
-                            src="../src/assets/logo.svg"
+                            src= {theme.palette.mode === "dark" ? "../src/assets/logo-yellow.svg" : "../src/assets/logo-black.svg"}
                             alt="Logo"
                             style={{ height: "50px"}}
                         />

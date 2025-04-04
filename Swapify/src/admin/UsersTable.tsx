@@ -79,10 +79,19 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                    getSelectedRole,
                                                    highlightSearchText,
                                                }) => {
-const theme=useGetTheme();
+    const theme=useGetTheme();
+
     return (
-        <Box sx={{ padding: "16px", flex: 1, transition: "margin-right 0.5s ease" }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        <Box sx={{
+            padding: "16px",
+            flex: 1,
+        }}>
+            <Box sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2
+            }}>
                 <Typography variant="h5">Individuals</Typography>
                 <Button
                     variant="contained"
@@ -92,7 +101,12 @@ const theme=useGetTheme();
                 </Button>
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <Box sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                mb: 2
+            }}>
                 <TextField
                     variant="outlined"
                     placeholder="Search by name or email"
@@ -118,7 +132,7 @@ const theme=useGetTheme();
                     </Typography>
                 </Box>
             ) : (
-                <>
+                <Box>
                     <TableContainer sx={{overflow: "auto",
                         maxHeight: {
                             xs: "auto",
@@ -137,7 +151,6 @@ const theme=useGetTheme();
                                         Actions
                                     </TableCell>
                                 </TableRow>
-                                {/* Example of table entry to maintain a fixed header */}
                                 <TableRow sx={{ visibility: "collapse" }}>
                                     <TableCell>averyaddress@exampledomain.com</TableCell>
                                     <TableCell>
@@ -214,7 +227,6 @@ const theme=useGetTheme();
                                                     variant="standard"
                                                     value={getSelectedRole(user.userId) || user.roleName || ""}
                                                     onChange={(e) => handleRoleChange(e, user.userId)}
-                                                    onClick={(e) => e.stopPropagation()}
                                                 >
                                                     {roles.map((role) => (
                                                         <MenuItem key={role.roleId} value={role.name}>
@@ -230,8 +242,7 @@ const theme=useGetTheme();
                                                 {user.lockoutEnd === null ? (
                                                     <IconButton
                                                         sx={blockButtonStyle}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
+                                                        onClick={() => {
                                                             handleBlockUser(user.userId);
                                                         }}
                                                         aria-label="block"
@@ -241,8 +252,7 @@ const theme=useGetTheme();
                                                 ) : (
                                                     <IconButton
                                                         sx={blockRedButtonStyle}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
+                                                        onClick={() => {
                                                             handleUnblockUser(user.userId);
                                                         }}
                                                         aria-label="block"
@@ -251,8 +261,7 @@ const theme=useGetTheme();
                                                     </IconButton>
                                                 )}
                                                 <IconButton
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
+                                                    onClick={() => {
                                                         handleRemoveUser(user.userId);
                                                     }}
                                                 >
@@ -277,7 +286,7 @@ const theme=useGetTheme();
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     </Box>
-                </>
+                </Box>
             )}
         </Box>
     );

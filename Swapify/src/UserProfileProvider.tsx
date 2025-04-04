@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext } from "react";
+import { useQuery, UseQueryResult } from "react-query";
 
 interface UserProfile {
   userId: string;
@@ -14,20 +15,18 @@ interface UserProfile {
 
 interface UserProfileContextType {
   userProfile: UserProfile | null;
-  setUserProfile: (profile: UserProfile | null | any) => void;
-  fetchUserProfile: (token: string) => Promise<UserProfile>;
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => Promise<UseQueryResult<UserProfile>>;
 }
 
-const UserProfileContext = createContext<UserProfileContextType | undefined>(
-  undefined,
-);
+const UserProfileContext = createContext<UserProfileContextType | undefined>(undefined);
 
-export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const fetchUserProfile = async (token: string): Promise<UserProfile> => {
+
+  const fetchUserProfile = async (): Promise<UserProfile> => {
+    const token = localStorage.getItem("jwtToken");
     const response = await fetch(`${apiUrl}/api/v1/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -41,25 +40,22 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     return await response.json();
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
-      fetchUserProfile(token)
-        .then((profile) => {
-          setUserProfile(profile);
-        })
-        .catch((error) => {
-          console.error("Error fetching user profile:", error);
-        });
-    }
-  }, []);
+  const {
+    data: userProfile,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery<UserProfile>({
+    queryKey: ["userProfile"],
+    queryFn: fetchUserProfile,
+    enabled: true,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return (
-    <UserProfileContext.Provider
-      value={{ userProfile, setUserProfile, fetchUserProfile }}
-    >
-      {children}
-    </UserProfileContext.Provider>
+      <UserProfileContext.Provider value={{ userProfile: userProfile ?? null, isLoading, isError, refetch }}>
+        {children}
+      </UserProfileContext.Provider>
   );
 };
 

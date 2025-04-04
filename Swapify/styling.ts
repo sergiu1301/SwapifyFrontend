@@ -14,7 +14,7 @@ export const lightThemeOptions: ThemeOptions = {
             main: primaryMain,
         },
         background: {
-            default: "#ffffff",
+            default: "#ececec",
             paper: "#ffffff",
         },
         text:{
@@ -25,7 +25,7 @@ export const lightThemeOptions: ThemeOptions = {
         MuiCssBaseline: {
             styleOverrides: {
                 body: {
-                    backgroundColor: "#ffffff",
+                    backgroundColor: "#ececec",
                     color:lightText
                 },
             },

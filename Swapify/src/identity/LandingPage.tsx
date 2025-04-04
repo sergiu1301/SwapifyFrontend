@@ -3,12 +3,11 @@ import {
     Box,
     Typography,
     Button,
-    Grid,
-    Paper,
     useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { SwapHoriz, Inventory2, Lock, Search } from "@mui/icons-material";
+import FeatureCarousel from "./FeatureCarousel.tsx";
 
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -17,12 +16,12 @@ const LandingPage: React.FC = () => {
     return (
         <Box
             sx={{
-                minHeight: "100vh",
-                maxWidth: "100vw",
                 backgroundColor: theme.palette.background.default,
                 position: "relative",
-                m: 2,
                 zIndex: 0,
+                overflow: "hidden",
+                height:"100vh",
+                width:'100vw',
             }}
         >
             {/* 🎨 Background BLOBs - decorative, fixed */}
@@ -60,14 +59,12 @@ const LandingPage: React.FC = () => {
             {/* HERO SECTION */}
             <Box
                 sx={{
-                    overFlow: "hidden",
-                    maxWidth: "100vw",
-                    maxHeight: "100vh",
+                    maxWidth: "1000px",
+                    padding: "12px",
+                    maxHeight: "96vh",
                     mx: "auto",
-                    pt: 2,
                     textAlign: "center",
                     position: "relative",
-                    zIndex: 1,
                 }}
             >
                 <Box
@@ -75,11 +72,10 @@ const LandingPage: React.FC = () => {
                     src="../src/assets/undraw_deliveries_yellow_adjusted.svg"
                     alt="Landing visual"
                     sx={{
-                        width: "100%",
-                        maxWidth: "70%",
+                        width: "70%",
                         objectFit: "contain",
                         mx: "auto",
-                        mb: 4,
+                        mb: 3,
                     }}
                 />
                 <Typography
@@ -92,7 +88,7 @@ const LandingPage: React.FC = () => {
                 <Typography
                     variant="h6"
                     color="text.secondary"
-                    mb={5}
+                    mb={3}
                 >
                     Trade your unused items securely and easily with people near you.
                 </Typography>
@@ -108,43 +104,16 @@ const LandingPage: React.FC = () => {
                 </Button>
 
                 <Typography
-                    variant="h4"
+                    variant="h5"
                     fontWeight={700}
                     textAlign="center"
-                    mb={6}
-                    mt={6}
+                    my={3}
                 >
                     What can you do with Swapify?
                 </Typography>
-
-                <Grid container spacing={4}>
-                    {features.map((feature) => (
-                        <Grid item xs={12} sm={6} md={3} sx={{mb:2}} key={feature.title}>
-                            <Paper
-                                elevation={3}
-                                sx={{
-                                    p: 3,
-                                    textAlign: "center",
-                                    borderRadius: 4,
-                                    height: "230px",
-                                    transition: "0.3s ease",
-                                    "&:hover": {
-                                        boxShadow: `0 0 15px ${theme.palette.mode === "dark" ? "#e3b43e44" : "#f4e3b6"}`,
-                                        transform: "translateY(-4px)",
-                                    },
-                                }}
-                            >
-                                <Box sx={{ mb: 2 }}>{feature.icon}</Box>
-                                <Typography variant="h6" fontWeight={600} gutterBottom>
-                                    {feature.title}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {feature.description}
-                                </Typography>
-                            </Paper>
-                        </Grid>
-                    ))}
-                </Grid>
+                <Box sx={{ maxWidth: "1000px", padding: "0 16px", mx: "auto", pb:"12px"}}>
+                    <FeatureCarousel features={features} />
+                </Box>
             </Box>
         </Box>
     );

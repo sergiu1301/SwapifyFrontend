@@ -9,6 +9,7 @@ import {
   Paper,
   Grid,
   CircularProgress,
+  useTheme
 } from "@mui/material";
 import {validateEmail} from "../lib/utils.ts";
 
@@ -17,6 +18,7 @@ const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const theme = useTheme();
   const apiUrl = import.meta.env.VITE_API_URL;
   const clientId = import.meta.env.VITE_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
@@ -65,6 +67,37 @@ const ForgotPassword: React.FC = () => {
           sx={{ ...paperSection, ...forgotPasswordContainerStyle }}
           elevation={10}
         >
+          {/* 🎨 Background BLOBs - decorative, fixed */}
+          <Box
+              sx={{
+                position: "fixed",
+                top: "-100px",
+                left: "-150px",
+                width: "400px",
+                height: "400px",
+                backgroundColor: "#e3b43e",
+                opacity: 0.1,
+                filter: "blur(130px)",
+                borderRadius: "50%",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+          />
+          <Box
+              sx={{
+                position: "fixed",
+                bottom: "-100px",
+                right: "-150px",
+                width: "500px",
+                height: "500px",
+                backgroundColor: theme.palette.mode === "dark" ? "#ffffff22" : "#00000011",
+                opacity: 0.1,
+                filter: "blur(160px)",
+                borderRadius: "50%",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+          />
           <Typography
             style={{
               fontSize: "23px",

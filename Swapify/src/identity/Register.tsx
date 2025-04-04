@@ -11,6 +11,7 @@ import {
   Paper,
   TextField,
   Typography,
+  useTheme
 } from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -27,6 +28,7 @@ const Register: React.FC = () => {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
   const apiUrl = import.meta.env.VITE_API_URL;
   const clientId = import.meta.env.VITE_CLIENT_ID;
   const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
@@ -94,6 +96,37 @@ const Register: React.FC = () => {
             sx={{...paperSection, ...registerContainerStyle}}
             elevation={10}
         >
+          {/* 🎨 Background BLOBs - decorative, fixed */}
+          <Box
+              sx={{
+                position: "fixed",
+                top: "-100px",
+                left: "-150px",
+                width: "400px",
+                height: "400px",
+                backgroundColor: "#e3b43e",
+                opacity: 0.1,
+                filter: "blur(130px)",
+                borderRadius: "50%",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+          />
+          <Box
+              sx={{
+                position: "fixed",
+                bottom: "-100px",
+                right: "-150px",
+                width: "500px",
+                height: "500px",
+                backgroundColor: theme.palette.mode === "dark" ? "#ffffff22" : "#00000011",
+                opacity: 0.1,
+                filter: "blur(160px)",
+                borderRadius: "50%",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+          />
           <Typography
               style={{
                 fontSize: "23px",

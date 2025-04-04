@@ -15,7 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useUserProfile } from "../UserProfileProvider";
 import { useNavigate } from "react-router-dom";
 import MaterialUISwitch from "./ThemeSwitcher";
-import {logout} from "../lib/utils.ts";
+import { useLogout } from "../hooks/useLogout";
 
 interface UserMenuProps {
     setShouldRefetchTheme:(val:boolean)=>void
@@ -26,9 +26,10 @@ interface UserMenuProps {
 const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchTheme,theme}) => {
     const { userProfile } = useUserProfile();
     const navigate = useNavigate();
+    const logout = useLogout();
 
     const handleProfileClick = () => {
-        navigate("?type=profile");
+        navigate("/profile");
         handleCloseMenu();
     };
 
@@ -43,7 +44,7 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
     };
 
     const handleLogout = () => {
-        logout(navigate);
+        logout();
         handleCloseMenu();
     };
 
