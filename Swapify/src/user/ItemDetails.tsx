@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
     Typography,
@@ -7,12 +7,19 @@ import {
     Divider,
     useTheme,
     Grid,
+    Dialog, DialogContent,
+    DialogTitle,
+    DialogActions, IconButton,
+    List,
+    ListItem,
+    ListItemText,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ImageCoverflow from "./ImageCoverflow";
 import ExpandableDescription from "./ExpandableDescription";
+import CloseIcon from "@mui/icons-material/Close";
 
 const conditions = ["New", "Like New", "Good", "Fair", "Used"];
 const locations = ["New York, NY", "San Francisco, CA", "Los Angeles, CA", "Austin, TX", "Chicago, IL"];
@@ -49,15 +56,30 @@ const items = Array.from({ length: 24 }).map((_, index) => ({
     location: locations[index % locations.length],
 }));
 
+const userItems = items.slice(0, 15); // simulate current user's items
+
 const ItemDetails: React.FC = () => {
     const { id } = useParams();
     const theme = useTheme();
     const navigate = useNavigate();
     const item = items.find((i) => i.id === Number(id));
+    const [tradeDialogOpen, setTradeDialogOpen] = useState(false);
+    const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
 
-    if (!item) {
-        return <Typography>Item not found.</Typography>;
-    }
+    if (!item) return <Typography>Item not found.</Typography>;
+
+    const handleInitiateTrade = () => {
+        if (selectedItemIds.length > 0) {
+            alert(`Trade initiated with item IDs: ${selectedItemIds.join(", ")}`);
+            setTradeDialogOpen(false);
+        }
+    };
+
+    const handleToggleItem = (id: number) => {
+        setSelectedItemIds((prev) =>
+            prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+        );
+    };
 
     return (
         <Box
@@ -70,8 +92,6 @@ const ItemDetails: React.FC = () => {
         >
             <Box sx={{ maxWidth: "100%", mx: "auto", mb:5}}>
                 <ImageCoverflow images={item.images} />
-
-                <Divider />
 
                 <Box
                     sx={{
@@ -118,7 +138,7 @@ const ItemDetails: React.FC = () => {
                             <Button
                                 variant="contained"
                                 sx={{ textTransform: "none", whiteSpace: "nowrap" }}
-                                onClick={() => alert("Initiate trade")}
+                                onClick={() => setTradeDialogOpen(true)}
                             >
                                 Trade
                             </Button>
@@ -236,9 +256,75 @@ const ItemDetails: React.FC = () => {
                             </Box>
                         </Grid>
                     </Grid>
-
                 </Box>
             </Box>
+
+            <Dialog open={tradeDialogOpen} onClose={() => setTradeDialogOpen(false)} maxWidth="sm" fullWidth>
+                <DialogTitle>Select one of your items to trade</DialogTitle>
+                <IconButton
+                    aria-label="close"
+                    onClick={() => setTradeDialogOpen(false)}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <DialogContent>
+                    <List sx={{overflow: {
+                            xs: "auto",
+                            md: "auto",
+                            "&::-webkit-scrollbar": {
+                                width: "8px",
+                                height: "8px",
+                            },
+                            "&::-webkit-scrollbar-thumb": {
+                                borderRadius: "8px",
+                            },
+                            scrollbarWidth: "thin",
+                            scrollbarColor:  theme.palette.mode === "dark" ? "#555 #2a2a2a" : ""
+                        },
+                        maxHeight: {
+                            xs: "auto",
+                            md: "calc(100vh - 280px)",
+                        },
+                        scrollbarWidth: "thin",
+                    }}>
+                        {userItems.map((myItem) => {
+                            const selected = selectedItemIds.includes(myItem.id);
+                            return (
+                                <ListItem
+                                    key={myItem.id}
+                                    onClick={() => handleToggleItem(myItem.id)}
+                                    sx={{
+                                        borderRadius: 2,
+                                        border: "1px solid",
+                                        borderColor: theme.palette.divider,
+                                        backgroundColor: selected ? theme.palette.action.selected : "transparent",
+                                        cursor: "pointer",
+                                        mb: 1,
+                                        transition: "all 0.2s"
+                                    }}
+                                >
+                                    <ListItemText
+                                        primary={myItem.name}
+                                        secondary={"Condition: " + myItem.condition}
+                                        primaryTypographyProps={{ fontWeight: 500 }}
+                                    />
+                                </ListItem>
+                            );
+                        })}
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={() => setTradeDialogOpen(false)}>Cancel</Button>
+                    <Button variant="contained" onClick={handleInitiateTrade} disabled={selectedItemIds.length === 0}>
+                        Initiate Trade
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

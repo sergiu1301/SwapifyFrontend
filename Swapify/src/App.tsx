@@ -63,7 +63,7 @@ const App: React.FC = () => {
                             <Route path="/roles" element={<RolesSection />} />
                             <Route path="/individuals" element={<IndividualsSection />} />
                             <Route path="/home" element={<AvailableItemsSection theme={theme}/>} />
-                            <Route path="/my-inventory" element={<MyItemsSection />} />
+                            <Route path="/my-inventory" element={<MyItemsSection theme={theme}/>} />
                             <Route path="/items/:id" element={<ItemDetails />} />
                         </Route>
                         <Route

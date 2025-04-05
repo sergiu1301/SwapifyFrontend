@@ -4,6 +4,7 @@ import {Outlet, useNavigate} from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import { useStore } from "../store";
+import useStatusHub from "../hooks/useStatusHub";
 
 interface DashboardAdminProps {
     setShouldRefetchTheme:(val:boolean)=>void
@@ -17,6 +18,8 @@ const Dashboard:React.FC<DashboardAdminProps> = ({setShouldRefetchTheme,shouldRe
     const sidebarTransition = "margin-left 0.5s cubic-bezier(1, 1, 1, 1)";
     const sidebarWidthOpen = 240;
     const sidebarWidthClosed = 64;
+
+    useStatusHub();
 
     const handleButtonClick = (selectedContext: "individuals" | "roles" | "home" | "my-inventory") => {
         if(selectedContext === "home" || selectedContext === "my-inventory" || selectedContext === "individuals" || selectedContext === "roles") {

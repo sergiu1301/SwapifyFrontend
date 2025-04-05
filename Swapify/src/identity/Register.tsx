@@ -50,10 +50,15 @@ const Register: React.FC = () => {
   const handleRegister = async () => {
     if(password === "" || email === "")
     {
-      setEmailError("This field cannot be empty.");
-      setPasswordError("This field cannot be empty.");
-      setConfirmPasswordError("This field cannot be empty.");
-      return;
+        setPasswordError("This field cannot be empty.");
+        setConfirmPasswordError("This field cannot be empty.");
+        return;
+    }
+
+    if(email === "")
+    {
+        setEmailError("This field cannot be empty.");
+        return;
     }
 
     if(passwordError === "" && confirmPasswordError === "" && emailError === "") {
@@ -148,6 +153,7 @@ const Register: React.FC = () => {
             <TextField
                 type="email"
                 value={email}
+                required
                 onChange={(event: React.ChangeEvent<HTMLInputElement>)=> {
                   handleEmailChange(event);
                   validateEmail({email: event.target.value, setEmailError});
@@ -168,6 +174,7 @@ const Register: React.FC = () => {
             <TextField
                 type={isRevealPwd1 ? "text" : "password"}
                 value={password}
+                required
                 onChange={handlePasswordChange}
                 onBlur={() => validatePassword({password, setPasswordError})}
                 label="Password"
@@ -210,6 +217,7 @@ const Register: React.FC = () => {
                 onBlur={() => validateConfirmPassword({password, confirmPassword, setConfirmPasswordError})}
                 label="Confirm password"
                 fullWidth
+                required
                 error={!!confirmPasswordError}
                 helperText={confirmPasswordError}
                 InputProps={{

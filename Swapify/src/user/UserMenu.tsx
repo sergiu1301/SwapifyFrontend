@@ -16,6 +16,7 @@ import { useUserProfile } from "../UserProfileProvider";
 import { useNavigate } from "react-router-dom";
 import MaterialUISwitch from "./ThemeSwitcher";
 import { useLogout } from "../hooks/useLogout";
+import { useOnlineUsersStore } from "../store/OnlineUsersStore";
 
 interface UserMenuProps {
     setShouldRefetchTheme:(val:boolean)=>void
@@ -27,6 +28,10 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
     const { userProfile } = useUserProfile();
     const navigate = useNavigate();
     const logout = useLogout();
+
+    const isOnline = useOnlineUsersStore((s) =>
+        userProfile?.userId ? s.isUserOnline(userProfile.userId) : false
+    );
 
     const handleProfileClick = () => {
         navigate("/profile");
@@ -43,8 +48,8 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         handleCloseMenu();
     };
 
@@ -61,7 +66,22 @@ const UserMenu: React.FC<UserMenuProps> = ({setShouldRefetchTheme,shouldRefetchT
         <Box>
             {/* Buton pe care se face click pentru a deschide meniul */}
             <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
-                <Avatar alt={userProfile?.userName} src="/avatar.jpg" />
+                <Box sx={{ position: "relative" }}>
+                    <Avatar alt={userProfile?.userName} src="/avatar.jpg" />
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            bottom: 0,
+                            right: 0,
+                            width: 12,
+                            height: 12,
+                            backgroundColor: isOnline ? "green" : "gray",
+                            borderRadius: "50%",
+                            border: "2px solid",
+                            borderColor: theme.palette.background.paper,
+                        }}
+                    />
+                </Box>
             </IconButton>
 
             {/* Meniul dropdown */}

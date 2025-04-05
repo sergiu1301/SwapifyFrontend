@@ -2,6 +2,7 @@ import React from "react";
 import {Box, Button, Divider, IconButton, Paper, Tab, Tabs, TextField, Typography} from "@mui/material";
 import {useUserProfile} from "../UserProfileProvider";
 import EditIcon from "@mui/icons-material/Edit";
+import { updateUser } from "../hooks/updateUser";
 
 function TabPanel(props: { children?: React.ReactNode; value: number; index: number }) {
     const { children, value, index } = props;
@@ -27,8 +28,7 @@ function TabPanel(props: { children?: React.ReactNode; value: number; index: num
 const ProfilePage: React.FC = () => {
     const [tabValue, setTabValue] = React.useState(0);
     const [isEditing, setIsEditing] = React.useState(false);
-
-    const { userProfile } = useUserProfile();
+    const { userProfile, refetch } = useUserProfile();
 
     const [editData, setEditData] = React.useState({
         firstName: userProfile?.firstName || "",
@@ -55,9 +55,15 @@ const ProfilePage: React.FC = () => {
     };
 
 
-    const handleSaveEdit = () => {
-        console.log("Saved values:", editData);
-        // TODO: Aici apelezi endpointul pentru update dacă ai
+    const handleSaveEdit = async () => {
+        await updateUser({
+            firstName: editData.firstName,
+            lastName: editData.lastName,
+            phoneNumber: editData.phone,
+            userName: editData.userName,
+        });
+
+        await refetch();
         setIsEditing(false);
     };
 

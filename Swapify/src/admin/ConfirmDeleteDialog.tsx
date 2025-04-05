@@ -6,8 +6,9 @@ import {
     DialogContentText,
     DialogActions,
     TextField,
-    Button,
+    Button, IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface ConfirmDeleteDialogProps {
     open: boolean;
@@ -27,6 +28,17 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Confirm Deletion</DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={onClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
             <DialogContent>
                 <DialogContentText>
                     Please enter your email to confirm the deletion.

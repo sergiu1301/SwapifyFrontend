@@ -16,12 +16,13 @@ import {
     TableRow,
     TextField,
     Typography,
+    useTheme
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BlockIcon from "@mui/icons-material/Block";
 import SearchIcon from "@mui/icons-material/Search";
 import ShimmerUsersTableLoader from "./ShimmerUsersTableLoader.tsx";
-import {useGetTheme} from "../hooks/useGetTheme.ts";
+import { useOnlineUsersStore } from "../store/OnlineUsersStore";
 
 interface User {
     userId: string;
@@ -79,8 +80,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                    getSelectedRole,
                                                    highlightSearchText,
                                                }) => {
-    const theme=useGetTheme();
-
+    const theme = useTheme();
+    const onlineUsers = useOnlineUsersStore((s) => s.onlineUserIds);
     return (
         <Box sx={{
             padding: "16px",
@@ -143,11 +144,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         <Table stickyHeader >
                             <TableHead>
                                 <TableRow>
-                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Member</TableCell>
-                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Status</TableCell>
-                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Role</TableCell>
-                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}}>Phone</TableCell>
-                                    <TableCell style={{ backgroundColor: theme === "light" ? "#f7e9c7" : "#4a4a4a"}} align="right">
+                                    <TableCell style={{ backgroundColor: theme.palette.mode === "light" ? "#f7e9c7" : "#4a4a4a"}}>Member</TableCell>
+                                    <TableCell style={{ backgroundColor: theme.palette.mode === "light" ? "#f7e9c7" : "#4a4a4a"}}>Status</TableCell>
+                                    <TableCell style={{ backgroundColor: theme.palette.mode === "light" ? "#f7e9c7" : "#4a4a4a"}}>Role</TableCell>
+                                    <TableCell style={{ backgroundColor: theme.palette.mode === "light" ? "#f7e9c7" : "#4a4a4a"}}>Phone</TableCell>
+                                    <TableCell style={{ backgroundColor: theme.palette.mode === "light" ? "#f7e9c7" : "#4a4a4a"}} align="right">
                                         Actions
                                     </TableCell>
                                 </TableRow>
@@ -191,7 +192,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                 cursor: "pointer",
                                                 transition: "background-color 0.2s ease",
                                                 "&:hover": {
-                                                    backgroundColor: theme==="dark" ? "#3b3b3b" : "#f9f0d8",
+                                                    backgroundColor: theme.palette.mode==="dark" ? "#3b3b3b" : "#f9f0d8",
                                                 },
                                             }}
                                         >
@@ -200,7 +201,22 @@ const UsersTable: React.FC<UsersTableProps> = ({
                                                 title={user.email}
                                             >
                                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                                    <Avatar alt={user.userName} src="/avatar.jpg" />
+                                                    <Box sx={{ position: "relative" }}>
+                                                        <Avatar alt={user.userName} src="/avatar.jpg" />
+                                                        <Box
+                                                            sx={{
+                                                                position: "absolute",
+                                                                bottom: 0,
+                                                                right: 0,
+                                                                width: 12,
+                                                                height: 12,
+                                                                backgroundColor: onlineUsers.has(user.userId) ? "#44b700" : "#A9A9A9",
+                                                                borderRadius: "50%",
+                                                                border: "2px solid",
+                                                                borderColor: theme.palette.background.paper,
+                                                            }}
+                                                        />
+                                                    </Box>
                                                     {highlightSearchText(user.email, searchQuery)}
                                                 </Box>
                                             </TableCell>

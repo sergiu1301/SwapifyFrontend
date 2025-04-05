@@ -78,8 +78,9 @@ const AvailableItemsSection: React.FC<AvailableItemsSectionProps> = ({ theme }) 
                             },
                             flexShrink: 0,
                             mt:0.5,
-                            ml:0.5,
-                            mb:0.5
+                            ml:0.25,
+                            mb:0.5,
+                            mr:0.25
                         }}
                     >
                         <Paper
@@ -91,7 +92,7 @@ const AvailableItemsSection: React.FC<AvailableItemsSectionProps> = ({ theme }) 
                                 backgroundColor: "background.default",
                                 padding: 2,
                                 "&:hover": {
-                                    boxShadow: `0 0 10px ${theme.palette.mode === "dark" ? "#e3b43e" : "#f4e3b6"}`,
+                                    boxShadow: `0 0 7px ${theme.palette.mode === "dark" ? "#e3b43e" : "#f4e3b6"}`,
                                 },
                             }}
                         >

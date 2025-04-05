@@ -24,8 +24,9 @@ const ImageCoverflow: React.FC<Props> = ({ images, autoRotateInterval = 9000 }) 
     useEffect(() => {
         const interval = setInterval(() => {
             handleNext();
-        }, autoRotateInterval);
+            console.log("here")
 
+        }, autoRotateInterval);
         return () => clearInterval(interval);
     }, [autoRotateInterval, images.length]);
 
@@ -79,7 +80,7 @@ const ImageCoverflow: React.FC<Props> = ({ images, autoRotateInterval = 9000 }) 
                                     objectFit: "cover",
                                     borderRadius: "16px",
                                     border: "1px solid #ccc",
-                                    boxShadow: offset === 0 ? `0 0 10px #e3b43e` : ``,
+                                    boxShadow: offset === 0 ? `0 0 5px #e3b43e` : ``,
                                     transform: `
                                     scale(${offset === 0 ? 1 : 1})
                                     translateZ(${offset === 0 ? "100px" : "-100px"})

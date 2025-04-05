@@ -48,7 +48,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
   } = useQuery<UserProfile>({
     queryKey: ["userProfile"],
     queryFn: fetchUserProfile,
-    enabled: true,
+    enabled: !!localStorage.getItem("jwtToken"),
     staleTime: 1000 * 60 * 5,
   });
 

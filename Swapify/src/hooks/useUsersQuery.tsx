@@ -29,7 +29,7 @@ const useUsersQuery = ({ page, rowsPerPage, searchQuery, enabled }: {
 
     return useQuery(["users", page, rowsPerPage, searchQuery], () =>
         fetchUsers(page, rowsPerPage, searchQuery, token, apiUrl), {
-        enabled: enabled && !!token,
+        enabled: enabled,
         staleTime: 5 * 60 * 1000,
         cacheTime: 10 * 60 * 1000,
     });

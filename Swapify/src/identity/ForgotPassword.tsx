@@ -123,6 +123,7 @@ const ForgotPassword: React.FC = () => {
                 <TextField
                 type="email"
                 value={email}
+                required
                 onChange={(event: React.ChangeEvent<HTMLInputElement>)=> {
                   handleEmailChange(event);
                   validateEmail({email: event.target.value, setEmailError});
